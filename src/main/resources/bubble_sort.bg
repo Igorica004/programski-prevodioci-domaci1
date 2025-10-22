@@ -2,10 +2,10 @@
 procedura bubbleSort(podatak[] a, podatak n)
 {
   podatak       i,    j,tmp,n1,n2;
-  n1 podesi n-1;
+  n1 podesi n potkresi 1;
   ponovi(i podesi 0; i < n1; 1)
   {
-    n2 podesi n-i-2;
+    n2 podesi n potkresi i potkresi 2;
     ponovi(j podesi 0; j < n2; 1)
     {
       proveri(a[j] > a[j+1]) pa

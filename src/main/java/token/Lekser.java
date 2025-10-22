@@ -60,6 +60,7 @@ public class Lekser {
         klase.put(TokenType.RBRACK, "\\]");
         klase.put(TokenType.SEMICOL, ";");
         klase.put(TokenType.COMMA, ",");
+        klase.put(TokenType.DOT, ".");
         klase.put(TokenType.FLOAT_LIT, "[+-]?([0-9]+\\.[0-9]*|\\.[0-9]+)");
         klase.put(TokenType.INT_LIT, "[+-]?[0-9]+");
         klase.put(TokenType.CHAR_LIT, "'([^'\\\\]|\\\\[nrt\\\\'])'");

@@ -25,6 +25,7 @@ public enum TokenType {
     RBRACK,
     SEMICOL,
     COMMA,
+    DOT,
     EQ,
     GT,
     LT,
