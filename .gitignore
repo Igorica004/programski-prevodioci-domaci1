@@ -1,4 +1,5 @@
 .envrc
+flake.lock
 .direnv/
 target/
 !.mvn/wrapper/maven-wrapper.jar
