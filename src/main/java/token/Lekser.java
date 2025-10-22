@@ -60,7 +60,7 @@ public class Lekser {
         klase.put(TokenType.RBRACK, "\\]");
         klase.put(TokenType.SEMICOL, ";");
         klase.put(TokenType.COMMA, ",");
-        klase.put(TokenType.DOT, ".");
+        klase.put(TokenType.DOT, "\\.");
         klase.put(TokenType.FLOAT_LIT, "[+-]?([0-9]+\\.[0-9]*|\\.[0-9]+)");
         klase.put(TokenType.INT_LIT, "[+-]?[0-9]+");
         klase.put(TokenType.CHAR_LIT, "'([^'\\\\]|\\\\[nrt\\\\'])'");
@@ -109,7 +109,7 @@ public class Lekser {
                     }
                 }
                 if (!hit) { // todo handlovati gresku
-
+                    throw new RuntimeException("Nevalidan karakter '" + line.charAt(col) + "' na poziciji " + row + ":" + col);
                 }
             }
             row++;
