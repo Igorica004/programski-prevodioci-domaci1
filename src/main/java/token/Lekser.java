@@ -17,58 +17,61 @@ public class Lekser {
 
     public List<Token> scanTokens() {
         List<Token> tokens = new ArrayList<>();
-        LinkedHashMap<TokenType, String> klase = new LinkedHashMap<>(); //First match metod, ne max munch. Znaci da je poredak u listi bitan
+        ArrayList<Pair> klase = new ArrayList<>(); //First match metod, ne max munch. Znaci da je poredak u listi bitan
 
-        klase.put(TokenType.INT, "podatak");
-        klase.put(TokenType.FLOAT, "plutajuci");
-        klase.put(TokenType.CHAR, "pismo");
-        klase.put(TokenType.STRING, "poruka");
-        klase.put(TokenType.BOOL, "pojam");
-        klase.put(TokenType.MAIN, "program");
-        klase.put(TokenType.IF, "proveri");
-        klase.put(TokenType.ELSE, "pak"); // mora iznad pa, zbog First matcha. Slicno i za logicke operatore
-        klase.put(TokenType.THEN, "pa");
-        klase.put(TokenType.FOR, "ponovi");
-        klase.put(TokenType.ASSIGN, "podesi");
-        klase.put(TokenType.ADD, "plus");
-        klase.put(TokenType.SUBTRACT, "potkresi");
-        klase.put(TokenType.MULTIPLY, "puta");
-        klase.put(TokenType.DIVIDE, "podeljeno");
-        klase.put(TokenType.TRUE, "pozitivno");
-        klase.put(TokenType.FALSE, "pogresno");
-        klase.put(TokenType.BREAK, "prekini");
-        klase.put(TokenType.CONT, "produzi");
-        klase.put(TokenType.RETURN, "povrati");
-        klase.put(TokenType.VAR, "postavi");
-        klase.put(TokenType.PROC, "procedura");
-        klase.put(TokenType.ENUM, "popis");
-        klase.put(TokenType.STRUCT, "postoji");
-        klase.put(TokenType.PERCENT, "%");
-        klase.put(TokenType.EQ, "==");
-        klase.put(TokenType.GTE, ">=");
-        klase.put(TokenType.LTE, "<=");
-        klase.put(TokenType.GT, ">");
-        klase.put(TokenType.LT, "<");
-        klase.put(TokenType.NEQ, "!=");
-        klase.put(TokenType.AND, "&&");
-        klase.put(TokenType.OR, "\\|\\|");
-        klase.put(TokenType.LPAREN, "\\(");
-        klase.put(TokenType.RPAREN, "\\)");
-        klase.put(TokenType.LBRACE, "\\{");
-        klase.put(TokenType.RBRACE, "\\}");
-        klase.put(TokenType.LBRACK, "\\[");
-        klase.put(TokenType.RBRACK, "\\]");
-        klase.put(TokenType.SEMICOL, ";");
-        klase.put(TokenType.COMMA, ",");
-        klase.put(TokenType.DOT, "\\.");
-        klase.put(TokenType.FLOAT_LIT, "[+-]?([0-9]+\\.[0-9]*|\\.[0-9]+)");
-        klase.put(TokenType.INT_LIT, "[+-]?[0-9]+");
-        klase.put(TokenType.CHAR_LIT, "'([^'\\\\]|\\\\[nrt\\\\'])'");
-        klase.put(TokenType.STRING_LIT, "\"([^\"\\\\]|\\\\[nrt])*\"");
-        klase.put(TokenType.BOOL_LIT, "(pozitivno|pogresno)");
-        klase.put(TokenType.WHITESPACE, "\\s+"); // Da li sme da stoji na vrhu? Zbog optimizacije
-        klase.put(TokenType.COMMENT, "//.*|/\\*(.|\\R)*?\\*/"); // da li mora komentar?
-        klase.put(TokenType.IDENT, "[a-zA-Z][a-zA-Z0-9_]*"); // mora da bude posle rezervisanih reci. Sme iznad string literala jer ne moze poceti sa "
+        klase.add(new Pair(TokenType.INT, "podatak"));
+        klase.add(new Pair(TokenType.FLOAT, "plutajuci"));
+        klase.add(new Pair(TokenType.CHAR, "pismo"));
+        klase.add(new Pair(TokenType.STRING, "poruka"));
+        klase.add(new Pair(TokenType.BOOL, "pojam"));
+        klase.add(new Pair(TokenType.MAIN, "program"));
+        klase.add(new Pair(TokenType.IF, "proveri"));
+        klase.add(new Pair(TokenType.ELSE, "pak")); // mora iznad pa, zbog First matcha. Slicno i za relacione operatore
+        klase.add(new Pair(TokenType.THEN, "pa"));
+        klase.add(new Pair(TokenType.FOR, "ponovi"));
+        klase.add(new Pair(TokenType.ASSIGN, "podesi"));
+        klase.add(new Pair(TokenType.ADD, "plus"));
+        klase.add(new Pair(TokenType.SUBTRACT, "potkresi"));
+        klase.add(new Pair(TokenType.MULTIPLY, "puta"));
+        klase.add(new Pair(TokenType.DIVIDE, "podeljeno"));
+        klase.add(new Pair(TokenType.TRUE, "pozitivno"));
+        klase.add(new Pair(TokenType.FALSE, "pogresno"));
+        klase.add(new Pair(TokenType.BREAK, "prekini"));
+        klase.add(new Pair(TokenType.CONT, "produzi"));
+        klase.add(new Pair(TokenType.RETURN, "povrati"));
+        klase.add(new Pair(TokenType.VAR, "postavi"));
+        klase.add(new Pair(TokenType.PROC, "procedura"));
+        klase.add(new Pair(TokenType.ENUM, "popis"));
+        klase.add(new Pair(TokenType.STRUCT, "postoji"));
+        klase.add(new Pair(TokenType.STRUCT, "promenljive"));
+        klase.add(new Pair(TokenType.PERCENT, "povrat"));
+        klase.add(new Pair(TokenType.EQ, "=="));
+        klase.add(new Pair(TokenType.GTE, ">="));
+        klase.add(new Pair(TokenType.LTE, "<="));
+        klase.add(new Pair(TokenType.GT, ">"));
+        klase.add(new Pair(TokenType.LT, "<"));
+        klase.add(new Pair(TokenType.NEQ, "!="));
+        klase.add(new Pair(TokenType.AND, "&&"));
+        klase.add(new Pair(TokenType.OR, "\\|\\|"));
+        klase.add(new Pair(TokenType.LPAREN, "\\("));
+        klase.add(new Pair(TokenType.RPAREN, "\\)"));
+        klase.add(new Pair(TokenType.LBRACE, "\\{"));
+        klase.add(new Pair(TokenType.RBRACE, "\\}"));
+        klase.add(new Pair(TokenType.LBRACK, "\\["));
+        klase.add(new Pair(TokenType.RBRACK, "\\]"));
+        klase.add(new Pair(TokenType.SEMICOL, ";"));
+        klase.add(new Pair(TokenType.COMMA, ","));
+        klase.add(new Pair(TokenType.DOT, "\\."));
+        klase.add(new Pair(TokenType.FLOAT_LIT, "[+-]?([0-9]+\\.[0-9]*|\\.[0-9]+)"));
+        klase.add(new Pair(TokenType.INT_LIT, "[+-]?[0-9]+"));
+        klase.add(new Pair(TokenType.CHAR_LIT, "'([^'\\\\]|\\\\[nrt\\\\'])'"));
+        klase.add(new Pair(TokenType.STRING_LIT, "\"([^\"\\\\]|\\\\[nrt])*\""));
+        klase.add(new Pair(TokenType.BOOL_LIT, "(pozitivno|pogresno)"));
+        klase.add(new Pair(TokenType.WHITESPACE, "\\s+")); // Da li sme da stoji na vrhu? Zbog optimizacije
+        klase.add(new Pair(TokenType.COMMENT, "//.*|/\\*(.|\\R)*?\\*/")); // da li mora komentar?
+        klase.add(new Pair(TokenType.IDENT, "[a-zA-Z][a-zA-Z0-9_]*")); // mora da bude posle rezervisanih reci. Sme iznad string literala jer ne moze poceti sa "
+        // tokeni za read/write??
+        // sta se radi sa nizovima
 
         String[] lines = fajlTekst.split("\\R");
 
@@ -81,9 +84,9 @@ public class Lekser {
                 boolean hit = false;
                 String ostatak = line.substring(col); // ono sto jos uvek nije rasporedjeno u trenutnoj liniji
 
-                for (Map.Entry<TokenType, String> klasa : klase.entrySet()) {
-                    TokenType type = klasa.getKey();
-                    Pattern pattern = Pattern.compile("^" + klasa.getValue());
+                for (Pair pair : klase) {
+                    TokenType type = pair.first;
+                    Pattern pattern = Pattern.compile("^" + pair.second);
                     /*
                         Posto iz cele preostale linije treba da nadjemo najlevlji token, on mora da bude na pocetku (^)
                         Ako izostavimo ^, pronaci ce token u sred linije, sto nam ne odgovara zbog col
@@ -96,11 +99,16 @@ public class Lekser {
                         int tokenEnd = col + leksema.length() - 1;
 
                         if (type != TokenType.WHITESPACE && type != TokenType.COMMENT) {  // EOF ide ovde ili??
-                            if (type == TokenType.INT_LIT) tokens.add(new Token(type, leksema, Integer.parseInt(leksema), row, tokenStart, tokenEnd));
-                            else if (type == TokenType.FLOAT_LIT) tokens.add(new Token(type, leksema, Float.parseFloat(leksema), row, tokenStart, tokenEnd));
-                            else if (type == TokenType.CHAR_LIT) tokens.add(new Token(type, leksema, leksema.charAt(1), row, tokenStart, tokenEnd));
-                            else if (type == TokenType.STRING_LIT) tokens.add(new Token(type, leksema, leksema.substring(1,leksema.length()-1), row, tokenStart, tokenEnd));
-                            else if (type == TokenType.BOOL_LIT) tokens.add(new Token(type, leksema, leksema.matches("pozitivno"), row, tokenStart, tokenEnd));
+                            if (type == TokenType.INT_LIT)
+                                tokens.add(new Token(type, leksema, Integer.parseInt(leksema), row, tokenStart, tokenEnd));
+                            else if (type == TokenType.FLOAT_LIT)
+                                tokens.add(new Token(type, leksema, Float.parseFloat(leksema), row, tokenStart, tokenEnd));
+                            else if (type == TokenType.CHAR_LIT)
+                                tokens.add(new Token(type, leksema, leksema.charAt(1), row, tokenStart, tokenEnd));
+                            else if (type == TokenType.STRING_LIT)
+                                tokens.add(new Token(type, leksema, leksema.substring(1, leksema.length() - 1), row, tokenStart, tokenEnd));
+                            else if (type == TokenType.BOOL_LIT)
+                                tokens.add(new Token(type, leksema, leksema.matches("pozitivno"), row, tokenStart, tokenEnd));
                             else tokens.add(new Token(type, leksema, null, row, tokenStart, tokenEnd));
                         }
                         col += leksema.length();
@@ -116,5 +124,15 @@ public class Lekser {
         }
         tokens.add(new Token(TokenType.EOF,"pivo",null,row,0,0));
         return tokens;
+    }
+}
+
+class Pair {
+    TokenType first;
+    String second;
+
+    Pair(TokenType first, String second) {
+        this.first = first;
+        this.second = second;
     }
 }

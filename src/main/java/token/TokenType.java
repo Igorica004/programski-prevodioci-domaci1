@@ -12,6 +12,8 @@ public enum TokenType {
     ELSE,
     FOR,
     ASSIGN,
+    PROGRAM,
+    VAR_BLOCK,
     ADD,
     SUBTRACT,
     MULTIPLY,
