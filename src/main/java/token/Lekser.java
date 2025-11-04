@@ -20,11 +20,12 @@ public class Lekser {
         ArrayList<Pair> klase = new ArrayList<>(); //First match metod, ne max munch. Znaci da je poredak u listi bitan
 
         klase.add(new Pair(TokenType.INT, "podatak"));
+        klase.add(new Pair(TokenType.NAMESPACE, "program"));
         klase.add(new Pair(TokenType.FLOAT, "plutajuci"));
         klase.add(new Pair(TokenType.CHAR, "pismo"));
         klase.add(new Pair(TokenType.STRING, "poruka"));
         klase.add(new Pair(TokenType.BOOL, "pojam"));
-        klase.add(new Pair(TokenType.MAIN, "program"));
+        klase.add(new Pair(TokenType.MAIN, "pocni"));
         klase.add(new Pair(TokenType.IF, "proveri"));
         klase.add(new Pair(TokenType.ELSE, "pak")); // mora iznad pa, zbog First matcha. Slicno i za relacione operatore
         klase.add(new Pair(TokenType.THEN, "pa"));
@@ -38,12 +39,12 @@ public class Lekser {
         klase.add(new Pair(TokenType.FALSE, "pogresno"));
         klase.add(new Pair(TokenType.BREAK, "prekini"));
         klase.add(new Pair(TokenType.CONT, "produzi"));
-        klase.add(new Pair(TokenType.RETURN, "povrati"));
+        klase.add(new Pair(TokenType.RETURN, "posalji"));
         klase.add(new Pair(TokenType.VAR, "postavi"));
+        klase.add(new Pair(TokenType.VAR_BLOCK, "promenljive"));
         klase.add(new Pair(TokenType.PROC, "procedura"));
         klase.add(new Pair(TokenType.ENUM, "popis"));
         klase.add(new Pair(TokenType.STRUCT, "postoji"));
-        klase.add(new Pair(TokenType.STRUCT, "promenljive"));
         klase.add(new Pair(TokenType.PERCENT, "povrat"));
         klase.add(new Pair(TokenType.EQ, "=="));
         klase.add(new Pair(TokenType.GTE, ">="));
@@ -51,6 +52,7 @@ public class Lekser {
         klase.add(new Pair(TokenType.GT, ">"));
         klase.add(new Pair(TokenType.LT, "<"));
         klase.add(new Pair(TokenType.NEQ, "!="));
+        klase.add(new Pair(TokenType.NOT, "!="));
         klase.add(new Pair(TokenType.AND, "&&"));
         klase.add(new Pair(TokenType.OR, "\\|\\|"));
         klase.add(new Pair(TokenType.LPAREN, "\\("));
@@ -70,7 +72,6 @@ public class Lekser {
         klase.add(new Pair(TokenType.WHITESPACE, "\\s+")); // Da li sme da stoji na vrhu? Zbog optimizacije
         klase.add(new Pair(TokenType.COMMENT, "//.*|/\\*(.|\\R)*?\\*/")); // da li mora komentar?
         klase.add(new Pair(TokenType.IDENT, "[a-zA-Z][a-zA-Z0-9_]*")); // mora da bude posle rezervisanih reci. Sme iznad string literala jer ne moze poceti sa "
-        // tokeni za read/write??
         // sta se radi sa nizovima
 
         String[] lines = fajlTekst.split("\\R");

@@ -1,0 +1,51 @@
+namespace = NAMESPACE IDENT SEMICOL
+          {proc_decl|enum_decl|struct_decl}
+          var_blok
+          main_blok;
+
+proc_decl = PROC [type] IDENT LPAREN [type IDENT {SEMICOL type IDENT}] RPAREN block;
+struct_decl = STRUCT IDENT LBRACE {type IDENT SEMICOL} RBRACE;
+enum_decl = ENUM IDENT LBRACE IDENT SEMICOL {IDENT SEMICOL} RBRACE;
+
+var_blok = VAR_BLOCK LBRACE {var_decl} RBRACE;
+var_decl = VAR type IDENT [ASSIGN expr] SEMICOL;
+type = (INT|FLOAT|CHAR|STRING|BOOL|IDENT) [LBRACK INT_LIT RBRACK];
+main_blok = MAIN LBRACE {stmt} RBRACE;
+
+stmt = dodela_stmt
+          | if_stmt
+          | loop_stmt
+          | (BREAK SEMICOL)
+          | (CONT SEMICOL)
+          | (RETURN expr SEMICOL)
+          | proc_stmt;
+
+dodela_stmt = lvalue ASSIGN expr SEMICOL;
+
+lvalue = IDENT
+       | IDENT LBRACK expr RBRACK
+       | IDENT DOT IDENT;
+
+if_stmt = IF LPAREN expr RPAREN THEN block [ELSE block];
+loop_stmt = FOR LPAREN (dodela_stmt|IDENT SEMICOL) expr SEMICOL dodela_stmt RPAREN block;
+proc_stmt = IDENT LPAREN [expr {SEMICOL expr}] RPAREN SEMICOL;
+
+block = LBRACE {stmt} RBRACE;
+expr = or_expr;
+
+or_expr = and_expr {OR and_expr};
+and_expr = rel_expr {AND rel_expr};
+rel_expr = math_expr [(EQ|NEQ|LT|GT|LTE|GTE) math_expr];
+math_expr = sabirak {(ADD|SUBTRACT) sabirak};
+sabirak = cinilac {(MULTIPLY|DIVIDE|PERCENT) cinilac};
+
+cinilac = literal
+       | idents
+       | struct_lit
+       | LPAREN expr RPAREN
+       | NOT cinilac;
+
+idents = IDENT ( (LBRACK expr RBRACK) | (DOT IDENT) | proc_expr | ε);
+proc_expr =  LPAREN [expr {SEMICOL expr}] RPAREN;
+struct_lit = LBRACE expr {SEMICOL expr} RBRACE;
+literal = INT_LIT|FLOAT_LIT|CHAR_LIT|STRING_LIT|BOOL_LIT;
