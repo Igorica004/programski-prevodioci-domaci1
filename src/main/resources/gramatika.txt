@@ -35,15 +35,16 @@ expr = or_expr;
 
 or_expr = and_expr {OR and_expr};
 and_expr = rel_expr {AND rel_expr};
-rel_expr = math_expr [(EQ|NEQ|LT|GT|LTE|GTE) math_expr];
-math_expr = sabirak {(ADD|SUBTRACT) sabirak};
-sabirak = cinilac {(MULTIPLY|DIVIDE|PERCENT) cinilac};
+rel_expr = add [(EQ|NEQ|LT|GT|LTE|GTE) add];
+add = mul {(ADD|SUBTRACT) mul};
+mul = unary {(MULTIPLY|DIVIDE|PERCENT) unary};
+unary = [ADD|SUBTRACT] power;
+power = primary [POW power];
 
-cinilac = literal
+primary = literal
        | idents
        | struct_lit
        | LPAREN expr RPAREN
-       | NOT cinilac;
 
 idents = IDENT ( (LBRACK expr RBRACK) | (DOT IDENT) | proc_expr | ε);
 proc_expr =  LPAREN [expr {SEMICOL expr}] RPAREN;
