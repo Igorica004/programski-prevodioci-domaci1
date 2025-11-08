@@ -1,7 +1,8 @@
 namespace = NAMESPACE IDENT SEMICOL
           {proc_decl|enum_decl|struct_decl}
           var_blok
-          main_blok;
+          main_blok
+          EOF;
 
 proc_decl = PROC [type] IDENT LPAREN [type IDENT {SEMICOL type IDENT}] RPAREN block;
 struct_decl = STRUCT IDENT LBRACE {type IDENT SEMICOL} RBRACE;
@@ -27,7 +28,7 @@ lvalue = IDENT
        | IDENT DOT IDENT;
 
 if_stmt = IF LPAREN expr RPAREN THEN block [ELSE block];
-loop_stmt = FOR LPAREN (dodela_stmt|IDENT SEMICOL) expr SEMICOL dodela_stmt RPAREN block;
+loop_stmt = FOR LPAREN dodela_stmt|(IDENT SEMICOL) expr SEMICOL dodela_stmt RPAREN block;
 proc_stmt = IDENT LPAREN [expr {SEMICOL expr}] RPAREN SEMICOL;
 
 block = LBRACE {stmt} RBRACE;
@@ -42,12 +43,12 @@ unary = [ADD|SUBTRACT] power;
 power = primary [POW power];
 
 primary = literal
-       | idents
+       | lvalue
        | struct_lit
        | LPAREN expr RPAREN
-       | NOT primary;
+       | NOT primary
+       | proc_expr;
 
-idents = IDENT ( (LBRACK expr RBRACK) | (DOT IDENT) | proc_expr | ε);
-proc_expr =  LPAREN [expr {SEMICOL expr}] RPAREN;
+proc_expr =  IDENT LPAREN [expr {SEMICOL expr}] RPAREN;
 struct_lit = LBRACE expr {SEMICOL expr} RBRACE;
 literal = INT_LIT|FLOAT_LIT|CHAR_LIT|STRING_LIT|BOOL_LIT;
