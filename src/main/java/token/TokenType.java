@@ -28,6 +28,7 @@ public enum TokenType {
     SEMICOL,
     COMMA,
     DOT,
+    POW,
     EQ,
     GT,
     LT,
