@@ -45,6 +45,7 @@ primary = literal
        | idents
        | struct_lit
        | LPAREN expr RPAREN
+       | NOT primary;
 
 idents = IDENT ( (LBRACK expr RBRACK) | (DOT IDENT) | proc_expr | ε);
 proc_expr =  LPAREN [expr {SEMICOL expr}] RPAREN;
