@@ -1,10 +1,11 @@
-package token;
+package lexer;
 
+
+import lexer.token.Token;
+import lexer.token.TokenType;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -89,8 +90,8 @@ public class Lekser {
                     TokenType type = pair.first;
                     Pattern pattern = Pattern.compile("^" + pair.second);
                     /*
-                        Posto iz cele preostale linije treba da nadjemo najlevlji token, on mora da bude na pocetku (^)
-                        Ako izostavimo ^, pronaci ce token u sred linije, sto nam ne odgovara zbog col
+                        Posto iz cele preostale linije treba da nadjemo najlevlji lexer.token, on mora da bude na pocetku (^)
+                        Ako izostavimo ^, pronaci ce lexer.token u sred linije, sto nam ne odgovara zbog col
                      */
                     Matcher matcher = pattern.matcher(ostatak);
 

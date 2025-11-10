@@ -1,4 +1,4 @@
-package token;
+package lexer.token;
 
 public class Token {// zasto ne rekord klasa?
     public final TokenType type;

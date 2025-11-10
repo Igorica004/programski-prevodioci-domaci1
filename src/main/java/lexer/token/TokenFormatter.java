@@ -1,4 +1,4 @@
-package token;
+package lexer.token;
 
 import java.util.List;
 

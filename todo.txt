@@ -1,0 +1,21 @@
+Potrebno je napraviti klasu za svaki tip iz gramtike (npr. main blok, if statement, expression, ...).
+
+Stukturu sam napisao po uzoru na kod sa drajva, verovatno moze i drugacije da se osmisli.
+
+Postoje 3 apstraktne klase od kojih svaki konkretan tip nasledjuje jednu:
+- Expr
+- Stmt
+- Ast (to su top-level tipovi, npr. proc_decl, namespace ili main_block)
+
+Tipovi koji nasledjuju Expr ili Stmt, posto imaju ugnjezdvanaje, implementiraju Visitor patern. (nisam siguran zasto ali tako je rekao Milutin na vezbama).
+Implementacija podrazumeva pozivanje visit metoda koje su implementirane u JsonAstPrinter klasi.
+Posto verovatno necemo imati iste tipove, neke metode cemo morati da dodamo u Visitor interfejse i implementacije u JsonAstPrinter.
+
+JsonAstPrinter koristi Jackson biblioteku da bi napravio stablo u JSON fajlu. Kako tacno ova klasa funkcionise, nisam siguran.
+
+RecognizerParser sluzi prolazi kroz strukturu koda ali ne pravi stablo, vec samo vraca true ako je kod parsibilan, u suprotnom false.
+AstParser, na isti nacin prolazi kroz struktura koda, ali pretvara kod u klase.
+Implementacija obilaska i provere koda je jednostavna, prateci pravila iz gramatike.
+
+JsonAstPrinter je uzet u celosti sa drajva, posto je Milutin rekao na vezbama da mozemo da koristimo njegov kod za ispis.
+Ostale klase bismo mozda mogli da iskopiramo, ali mislim da bismo bolje razumeli ako bismo sami implementirali (mozemo i dalje da gledamo Milutinov kod).
