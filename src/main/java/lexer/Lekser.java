@@ -47,6 +47,7 @@ public class Lekser {
         klase.add(new Pair(TokenType.ENUM, "popis"));
         klase.add(new Pair(TokenType.STRUCT, "postoji"));
         klase.add(new Pair(TokenType.PERCENT, "povrat"));
+        klase.add(new Pair(TokenType.POW, "podigni"));
         klase.add(new Pair(TokenType.EQ, "=="));
         klase.add(new Pair(TokenType.GTE, ">="));
         klase.add(new Pair(TokenType.LTE, "<="));
