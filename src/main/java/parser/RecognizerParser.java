@@ -51,6 +51,7 @@ public final class RecognizerParser {
             } while (match(SEMICOL));
         }
         consume(RPAREN,"expected RPAREN");
+        parseVarBlock();
         parseBlock();
     }
 
@@ -129,7 +130,7 @@ public final class RecognizerParser {
     //          | (CONT SEMICOL)
     //          | (RETURN expr SEMICOL)
     //          | proc_stmt;
-    private void parseStmt() {
+         private void parseStmt() {
         if (check(IDENT))
         {
             if(checkNext(LPAREN)) parseProcStmt();
@@ -175,7 +176,9 @@ public final class RecognizerParser {
             if (match(LBRACK)) {
                 parseExpr();
                 consume(RBRACK, "expected ']'");
-            } else if (match(DOT)) consume(IDENT, "expected identifier");
+            } else {
+                while(match(DOT)) consume(IDENT, "expected identifier");
+            } consume(IDENT, "expected identifier");
         }
         consume(ASSIGN, "expected ASSIGN");
         parseExpr();
@@ -219,7 +222,7 @@ public final class RecognizerParser {
     }
 
     // add = mul {(ADD|SUBTRACT) mul};
-    private void parseAdd(){
+    private void    parseAdd(){
         do parseMul();
         while (match(ADD, SUBTRACT));
     }
@@ -325,7 +328,7 @@ public final class RecognizerParser {
         throw new ParseError("PARSER ERROR > Error" + where + ": " + message + " (line: " + token.line + ", col: " + token.colStart + ")");
     }
 
-    private static final class ParseError extends RuntimeException {
-        ParseError(String s) { super(s); }
+    public static final class ParseError extends RuntimeException {
+        public ParseError(String s) { super(s); }
     }
 }

@@ -138,6 +138,12 @@ public final class JsonAstPrinter implements
         return o;
     }
 
+    @Override public JsonNode visitContinue(Stmt.Continue s) {
+        ObjectNode o = M.createObjectNode();
+        o.put("stmt", "continue");
+        return o;
+    }
+
     @Override public JsonNode visitAssign(Stmt.Assign s) {
         ObjectNode o = M.createObjectNode();
         o.put("stmt", "assign");
@@ -158,7 +164,7 @@ public final class JsonAstPrinter implements
         return o;
     }
 
-    @Override public JsonNode visitBeginIf(Stmt.BeginIf s) {
+    @Override public JsonNode visitIfStmt(Stmt.ForStmt s) {
         ObjectNode o = M.createObjectNode();
         o.put("stmt", "begin_if");
         ObjectNode first = M.createObjectNode();
@@ -169,7 +175,7 @@ public final class JsonAstPrinter implements
         o.set("if", first);
 
         ArrayNode orifs = M.createArrayNode();
-        for (Stmt.BeginIf.Arm a : s.orIfArms) {
+        for (Stmt.ForStmt.Arm a : s.orIfArms) {
             ObjectNode ar = M.createObjectNode();
             ar.set("cond", a.cond.accept(this));
             ArrayNode bb = M.createArrayNode();

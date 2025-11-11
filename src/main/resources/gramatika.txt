@@ -4,7 +4,7 @@ namespace = NAMESPACE IDENT SEMICOL
           main_blok
           EOF;
 
-proc_decl = PROC [type] IDENT LPAREN [type IDENT {SEMICOL type IDENT}] RPAREN block;
+proc_decl = PROC [type] IDENT LPAREN [type IDENT {SEMICOL type IDENT}] RPAREN var_blok block;
 struct_decl = STRUCT IDENT LBRACE {type IDENT SEMICOL} RBRACE;
 enum_decl = ENUM IDENT LBRACE IDENT SEMICOL {IDENT SEMICOL} RBRACE;
 
@@ -25,7 +25,7 @@ dodela_stmt = lvalue ASSIGN expr SEMICOL;
 
 lvalue = IDENT
        | IDENT LBRACK expr RBRACK
-       | IDENT DOT IDENT;
+       | IDENT DOT lvalue;
 
 if_stmt = IF LPAREN expr RPAREN THEN block [ELSE block];
 for_stmt = FOR LPAREN dodela_stmt|(IDENT SEMICOL) expr SEMICOL dodela_stmt RPAREN block;
