@@ -176,9 +176,11 @@ public final class RecognizerParser {
             if (match(LBRACK)) {
                 parseExpr();
                 consume(RBRACK, "expected ']'");
-            } else {
+            }
+            else
+            {
                 while(match(DOT)) consume(IDENT, "expected identifier");
-            } consume(IDENT, "expected identifier");
+            }
         }
         consume(ASSIGN, "expected ASSIGN");
         parseExpr();
@@ -222,7 +224,7 @@ public final class RecognizerParser {
     }
 
     // add = mul {(ADD|SUBTRACT) mul};
-    private void    parseAdd(){
+    private void parseAdd(){
         do parseMul();
         while (match(ADD, SUBTRACT));
     }

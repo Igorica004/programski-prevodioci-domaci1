@@ -46,7 +46,7 @@ public abstract class Stmt {
         List<Stmt> elseBranch = new java.util.ArrayList<>();
         public IfStmt() {}
         @Override
-        public <R> R accept(Visitor<R> v) {return v.visitIfStmt(this)}
+        public <R> R accept(Visitor<R> v) {return v.visitIfStmt(this);}
     }
 
     public static final class ForStmt extends Stmt {
@@ -69,6 +69,16 @@ public abstract class Stmt {
         }
         @Override
         public <R> R accept(Visitor<R> v) { return v.visitDodelaStmt();}
+    }
+
+    public static final class ProcStmt extends Stmt {
+        public Token name;
+        public List<Token> args;
+
+        @Override
+        public <R> R accept(Visitor<R> v) {
+            return v.visitProcStmt;
+        }
     }
 
     public static final class Return extends Stmt {

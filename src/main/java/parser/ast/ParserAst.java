@@ -42,12 +42,8 @@ public final class ParserAst {
     private Ast.TopItem parseProcDecl(){
         Ast.ProcDecl pd = new Ast.ProcDecl();
         consume(PROC,"expected PROC");
-        if(!match(IDENT)) {
-            pd.returnType = parseType();
-        }
-        else
-            pd.returnType = new Type(Type.Kind.VOID,null,1);
-
+        if(!match(IDENT)) pd.returnType = parseType();
+        else pd.returnType = new Type(Type.Kind.VOID,null,1);
         pd.name = consume(IDENT,"expected IDENT");
         consume(LPAREN,"expected LPAREN");
         if(!match(RPAREN))
@@ -221,6 +217,25 @@ public final class ParserAst {
         consume(ASSIGN, "expected ASSIGN");
         parseExpr();
         consume(SEMICOL, "expected ';'");
+        return ds;
+    }
+
+    private Stmt parseProcStmt(){
+        Stmt.ProcStmt ps = new Stmt.ProcStmt();
+        ps.name = consume(IDENT, "expected identifier");
+        consume(LPAREN, "expected '('");
+        if(!check(RPAREN))
+        {
+            do ps.args.add(parseExpr());
+            while (match(SEMICOL));
+        }
+        consume(RPAREN, "expected ')'");
+        consume(SEMICOL, "expected ';'");
+        return ps;
+    }
+
+    private Expr parseExpr(){
+
     }
 
     private boolean match(TokenType... types) {
