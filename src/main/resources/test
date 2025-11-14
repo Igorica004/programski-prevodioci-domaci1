@@ -1,12 +1,11 @@
 program personalni_program;
 
-postoji persona {
-   poruka ime;
-   poruke prezime;
-   podatak godine;
+procedura podatak proizvod_podataka(podatak p; podatak l)
+{
+   posalji p puta l;
 }
-promenljive { postavi persona p; }
+promenljive { postavi podatak p; }
 pocni {
-   p podesi { "Pavle";"Petrovic";80 };
-   pisi(p.ime);
+   p podesi proizvod_podataka(3;5);
+   pisi(proizvod_podataka(p;p));
 }

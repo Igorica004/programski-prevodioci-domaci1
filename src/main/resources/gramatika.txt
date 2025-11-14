@@ -4,7 +4,7 @@ namespace = NAMESPACE IDENT SEMICOL
           main_blok
           EOF;
 
-proc_decl = PROC [type] IDENT LPAREN [type IDENT {SEMICOL type IDENT}] RPAREN var_blok block;
+proc_decl = PROC [type] IDENT LPAREN [type IDENT {SEMICOL type IDENT}] RPAREN [var_blok] block;
 struct_decl = STRUCT IDENT LBRACE {type IDENT SEMICOL} RBRACE;
 enum_decl = ENUM IDENT LBRACE IDENT SEMICOL {IDENT SEMICOL} RBRACE;
 

@@ -38,7 +38,7 @@ public final class RecognizerParser {
         System.out.print("asdasd");
     }
 
-    // proc_decl = PROC [type] IDENT LPAREN [type IDENT {SEMICOL type IDENT}] RPAREN block
+    // proc_decl = PROC [type] IDENT LPAREN [type IDENT {SEMICOL type IDENT}] [var_block] RPAREN block
     private void parseProcDecl(){
         consume(PROC,"expected PROC");
         if(!match(IDENT)) parseType();
@@ -52,7 +52,7 @@ public final class RecognizerParser {
             } while (match(SEMICOL));
         }
         consume(RPAREN,"expected RPAREN");
-        parseVarBlock();
+        if(checkNext(VAR)) parseVarBlock();
         parseBlock();
     }
 
@@ -82,7 +82,6 @@ public final class RecognizerParser {
 
     // var_blok = VAR_BLOCK LBRACE {var_decl} RBRACE
     private void parseVarBlock(){
-        consume(VAR_BLOCK,"expected VAR_BLOCK");
         consume(LBRACE,"expected '{'");
         while(!match(RBRACE)) parseVarDecl();
     }
@@ -98,7 +97,6 @@ public final class RecognizerParser {
 
     // main_blok = MAIN LBRACE {stmt} RBRACE;
     private void parseMain(){
-        consume(MAIN,"expected MAIN");
         consume(LBRACE,"expected '{'");
         while(!match(RBRACE)) parseStmt();
     }
@@ -279,7 +277,6 @@ public final class RecognizerParser {
 
     //struct_lit = LBRACE expr {SEMICOL expr} RBRACE;
     private void parseStructLit() {
-        consume(LBRACE, "expected '{'");
         do parseExpr();
         while (match(SEMICOL));
         consume(RBRACE, "expected '}'");
