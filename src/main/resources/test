@@ -7,6 +7,6 @@ postoji persona {
 }
 promenljive { postavi persona p; }
 pocni {
-   p podesi { “Pavle”;”Petrovic”;80 };
+   p podesi { "Pavle";"Petrovic";80 };
    pisi(p.ime);
 }

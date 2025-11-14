@@ -35,6 +35,7 @@ public final class RecognizerParser {
         consume(MAIN,"expected MAIN");
         parseMain();
         consume(EOF, "expected EOF");
+        System.out.print("asdasd");
     }
 
     // proc_decl = PROC [type] IDENT LPAREN [type IDENT {SEMICOL type IDENT}] RPAREN block
