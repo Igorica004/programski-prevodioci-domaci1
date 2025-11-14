@@ -1,0 +1,12 @@
+program personalni_program;
+
+postoji persona {
+   poruka ime;
+   poruke prezime;
+   podatak godine;
+}
+promenljive { postavi persona p; }
+pocni {
+   p podesi { “Pavle”;”Petrovic”;80 };
+   pisi(p.ime);
+}

@@ -54,7 +54,7 @@ public class Lekser {
         klase.add(new Pair(TokenType.GT, ">"));
         klase.add(new Pair(TokenType.LT, "<"));
         klase.add(new Pair(TokenType.NEQ, "!="));
-        klase.add(new Pair(TokenType.NOT, "!="));
+        klase.add(new Pair(TokenType.NOT, "!"));
         klase.add(new Pair(TokenType.AND, "&&"));
         klase.add(new Pair(TokenType.OR, "\\|\\|"));
         klase.add(new Pair(TokenType.LPAREN, "\\("));

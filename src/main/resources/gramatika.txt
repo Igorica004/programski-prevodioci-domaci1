@@ -10,7 +10,7 @@ enum_decl = ENUM IDENT LBRACE IDENT SEMICOL {IDENT SEMICOL} RBRACE;
 
 var_blok = VAR_BLOCK LBRACE {var_decl} RBRACE;
 var_decl = VAR type IDENT [ASSIGN expr] SEMICOL;
-type = (INT|FLOAT|CHAR|STRING|BOOL|IDENT) {LBRACK INT_LIT RBRACK};
+type = (INT|FLOAT|CHAR|STRING|BOOL|IDENT) {LBRACK expr RBRACK};
 main_blok = MAIN LBRACE {stmt} RBRACE;
 
 stmt = dodela_stmt
@@ -24,7 +24,7 @@ stmt = dodela_stmt
 dodela_stmt = lvalue ASSIGN expr SEMICOL;
 
 lvalue = IDENT {DOT IDENT}
-       | IDENT LBRACK expr RBRACK
+       | IDENT {LBRACK expr RBRACK}
 
 if_stmt = IF LPAREN expr RPAREN THEN block [ELSE block];
 for_stmt = FOR LPAREN dodela_stmt|(IDENT SEMICOL) expr SEMICOL dodela_stmt RPAREN block;

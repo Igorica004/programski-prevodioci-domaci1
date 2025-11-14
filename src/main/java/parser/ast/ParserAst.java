@@ -1,4 +1,4 @@
-package parser.ast;
+/* package parser.ast;
 
 import lexer.token.Token;
 import lexer.token.TokenType;
@@ -130,11 +130,9 @@ public final class ParserAst {
             rank++;
             consume(LBRACK, null);
             if(!match(FLOAT_LIT,CHAR_LIT,STRING_LIT,BOOL_LIT,LBRACE,NOT)){
-                try{
+
                     t.dims.add(Integer.parseInt(parseAdd()));
-                }catch(ParseException e){
                     error(peek(),"Dimension must be an integer");
-                } // Trebalo bi da nije potreban try-catch, ali ako se ispostavi da imamo gresku ovde, lakse cemo je naci
                 consume(RBRACK, "expected ']'");
             }
             else error(peek(), "Can not define array dimension");
@@ -204,7 +202,7 @@ public final class ParserAst {
 
     private Stmt parseDodelaStmt(){
         Stmt.DodelaStmt ds = new Stmt.DodelaStmt();
-        if(checkNext(IDENT)) {
+        if(check(IDENT)) {
             ds.lvalue = consume(IDENT, "expected identifier");
             if (match(LBRACK)) {
                 ds.rvalue = parseExpr();
@@ -286,3 +284,4 @@ public final class ParserAst {
     }
 
 }
+*/

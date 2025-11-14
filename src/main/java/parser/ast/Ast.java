@@ -1,4 +1,4 @@
-package parser.ast;
+/* package parser.ast;
 
 import lexer.token.Token;
 
@@ -93,3 +93,4 @@ public final class Ast {
         }
     }
 }
+*/

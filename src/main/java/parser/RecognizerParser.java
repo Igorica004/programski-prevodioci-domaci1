@@ -102,18 +102,14 @@ public final class RecognizerParser {
         while(!match(RBRACE)) parseStmt();
     }
 
-    //type = (INT|FLOAT|CHAR|STRING|BOOL|IDENT) {LBRACK INT_LIT RBRACK} todo moze li samo INT_LIT bez npr niz[4+2*5^3]
+    //type = (INT|FLOAT|CHAR|STRING|BOOL|IDENT) {LBRACK expr RBRACK}
     private void parseType() {
         if (!match(INT,FLOAT,CHAR,STRING,BOOL,IDENT)) error(peek(),"Error");
         while (check(LBRACK))
         {
-            consume(LBRACK, null);
-            if(!match(FLOAT_LIT,CHAR_LIT,STRING_LIT,BOOL_LIT,LBRACE,NOT))
-            {
-                parseAdd(); // sta ako funkcija vraca string
-                consume(RBRACK, "expected ']'");
-            }
-            else error(peek(), "Can not define array dimension");
+            consume(LBRACK, "expected '['");
+            parseType();
+            consume(RBRACK, "expected ']'");
         }
     }
 
@@ -182,6 +178,7 @@ public final class RecognizerParser {
                 while(match(DOT)) consume(IDENT, "expected identifier");
             }
         }
+        else error(peek(),"greska");
         consume(ASSIGN, "expected ASSIGN");
         parseExpr();
         consume(SEMICOL, "expected ';'");
