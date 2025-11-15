@@ -2,7 +2,7 @@
   description = "Java flake";
     inputs = {
       nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-      intellij-flake.url = "path:/home/Igor/Programiranje/flakes/intellij";
+      intellij-flake.url = "path:/home/Igor/nixos-config/flakes/intellij";
     };
     outputs = { self, nixpkgs, intellij-flake }:
     let

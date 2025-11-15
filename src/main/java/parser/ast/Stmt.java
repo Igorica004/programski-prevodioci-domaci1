@@ -1,4 +1,4 @@
-/* package parser.ast;
+package parser.ast;
 
 import lexer.token.Token;
 
@@ -15,6 +15,8 @@ public abstract class Stmt {
         R visitBeginFor(BeginFor s);
         R visitContinue(Continue s);
         R visitForStmt(ForStmt s);
+        R visitProcStmt(ProcStmt s);
+        R visitDodelaStmt(DodelaStmt s);
     }
     public abstract <R> R accept(Visitor<R> v);
 
@@ -61,23 +63,23 @@ public abstract class Stmt {
     public static final class DodelaStmt extends Stmt {
         public Token lvalue;
         public Expr rvalue;
-        public List<Integer> dims = new java.util.ArrayList<>();
+        public List<Expr> dims = new java.util.ArrayList<>();
         public List<Token> indentifiers = new java.util.ArrayList<>();
         public DodelaStmt() {}
         public DodelaStmt(Token lvalue, Expr rvalue) {
             this.lvalue = lvalue; this.rvalue = rvalue;
         }
         @Override
-        public <R> R accept(Visitor<R> v) { return v.visitDodelaStmt();}
+        public <R> R accept(Visitor<R> v) { return v.visitDodelaStmt(this);}
     }
 
     public static final class ProcStmt extends Stmt {
         public Token name;
-        public List<Token> args;
+        public List<Expr> args;
 
         @Override
         public <R> R accept(Visitor<R> v) {
-            return v.visitProcStmt;
+            return v.visitProcStmt(this);
         }
     }
 
@@ -94,4 +96,3 @@ public abstract class Stmt {
     }
 
 }
-*/

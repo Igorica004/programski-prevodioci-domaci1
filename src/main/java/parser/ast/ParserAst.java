@@ -1,4 +1,4 @@
-/* package parser.ast;
+package parser.ast;
 
 import lexer.token.Token;
 import lexer.token.TokenType;
@@ -115,7 +115,7 @@ public final class ParserAst {
     }
 
     private Type parseType() {
-        if (!match(INT,FLOAT,CHAR,STRING,BOOL,IDENT))
+        if (!check(INT) && !check(FLOAT) && !check(CHAR) && !check(STRING) && !check(BOOL) && !check(IDENT))
             error(peek(),"Error");
         Type t = new Type();
         if(match(INT)) t.kind = Type.Kind.INT;
@@ -130,7 +130,6 @@ public final class ParserAst {
             rank++;
             consume(LBRACK, null);
             if(!match(FLOAT_LIT,CHAR_LIT,STRING_LIT,BOOL_LIT,LBRACE,NOT)){
-
                     t.dims.add(Integer.parseInt(parseAdd()));
                     error(peek(),"Dimension must be an integer");
                 consume(RBRACK, "expected ']'");
@@ -212,8 +211,10 @@ public final class ParserAst {
                     ds.indentifiers.add(consume(IDENT, "expected identifier"));
             }
         }
+        else
+            error(peek(),"Dodela statement must start with identifier");
         consume(ASSIGN, "expected ASSIGN");
-        parseExpr();
+        ds.rvalue = parseExpr();
         consume(SEMICOL, "expected ';'");
         return ds;
     }
@@ -224,7 +225,8 @@ public final class ParserAst {
         consume(LPAREN, "expected '('");
         if(!check(RPAREN))
         {
-            do ps.args.add(parseExpr());
+            do
+                ps.args.add(parseExpr());
             while (match(SEMICOL));
         }
         consume(RPAREN, "expected ')'");
@@ -233,7 +235,74 @@ public final class ParserAst {
     }
 
     private Expr parseExpr(){
+        return parseOrExpr();
+    }
 
+    private Expr parseOrExpr(){
+        Expr expr = parseAndExpr();
+        while(match(OR)){
+            Token op = previous();
+            Expr right = parseAndExpr();
+            expr = new Expr.Binary(expr,op,right);
+        }
+        return expr;
+    }
+
+    private Expr parseAndExpr(){
+        Expr expr = parseRelExpr();
+        while(match(AND)){
+            Token op = previous();
+            Expr right = parseRelExpr();
+            expr = new Expr.Binary(expr,op,right);
+        }
+        return expr;
+    }
+
+    private Expr parseRelExpr(){
+        Expr expr = parseAdd();
+        if(match(EQ,NEQ,LT,GT,LTE,GTE))
+            expr = new Expr.Binary(expr,previous(),parseAdd());
+        return expr;
+    }
+
+    private Expr parseAdd(){
+        Expr expr = parseMul();
+        while(match(ADD, SUBTRACT))
+            expr = new Expr.Binary(expr,previous(),parseMul());
+        return expr;
+    }
+
+    private Expr parseMul(){
+        Expr expr = parseUnary();
+        while(match(MULTIPLY,DIVIDE,PERCENT))
+           expr = new Expr.Binary(expr,previous(),parseUnary());
+        return expr;
+    }
+
+    private Expr parseUnary(){
+        if(match(SUBTRACT,ADD))
+            return new Expr.Unary(previous(),parsePower());
+        return parsePower();
+    }
+
+    private Expr parsePower(){
+        Expr expr = parsePrimary();
+        if(match(POW))
+            expr = new Expr.Binary(expr,previous(),parsePower());
+        return expr;
+    }
+
+    private Expr parsePrimary(){
+        if(match(IDENT)){
+            Expr expr;
+            Token ident = previous();
+            if(check(LBRACK)){
+                expr =
+                while(match(LBRACK)){
+
+                }
+            } else if
+        }
     }
 
     private boolean match(TokenType... types) {
@@ -245,8 +314,7 @@ public final class ParserAst {
 
     private Token consume(TokenType type, String message) {
         if (check(type)) {
-            advance();
-            return;
+            return advance();
         }
         error(peek(), message);
         throw new RecognizerParser.ParseError(message);
@@ -284,4 +352,3 @@ public final class ParserAst {
     }
 
 }
-*/

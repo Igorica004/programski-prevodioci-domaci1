@@ -171,13 +171,12 @@ public final class RecognizerParser {
             if (match(LBRACK)) {
                 parseExpr();
                 consume(RBRACK, "expected ']'");
-            }
-            else
-            {
+            } else {
                 while(match(DOT)) consume(IDENT, "expected identifier");
             }
         }
-        else error(peek(),"greska");
+        else
+            error(peek(),"Dodela statement must start with identifier");
         consume(ASSIGN, "expected ASSIGN");
         parseExpr();
         consume(SEMICOL, "expected ';'");

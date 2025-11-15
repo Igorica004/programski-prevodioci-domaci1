@@ -1,13 +1,16 @@
-/*package parser.ast;
+package parser.ast;
 
 import lexer.token.Token;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Expr {
-    // Ovo je uzeto sa drajva. Neke metode su nam mozda visak, a neke mozda treba da dodamo. Metode su implementirane u JsonAstPrinter
     public interface Visitor<R> {
         R visitLiteral(Literal e);
         R visitIdent(Ident e);
-        R visitIndex(Index e);
+        R visitUnary(Unary e);
+        R visitIndex(Index e)
         R visitGrouping(Grouping e);
         R visitCall(Call e);
         R visitBinary(Binary e);
@@ -15,8 +18,7 @@ public abstract class Expr {
 
     public abstract <R> R accept(Visitor<R> v);
 
-    // Za svaki tip iz gramatike treba da se napravi klasa koja implementira Visitor interfejs tako da poziva odgovarajucu metodu u JsonAstPrinter klasi
-    public final class Binary extends Expr {
+    public static final class Binary extends Expr {
         public final Token op;
         public final Expr left;
         public final Expr right;
@@ -25,8 +27,8 @@ public abstract class Expr {
     }
 
     public static final class Literal extends Expr {
-        public final Token token; // INT_LIT
-        public final int value;
+        public final Token token;
+        public final Object value; // mora da se castuje u odgovaracjuci tip
         public Literal(Token token, int value) { this.token = token; this.value = value; }
         @Override public <R> R accept(Visitor<R> v) { return v.visitLiteral(this); }
     }
@@ -36,7 +38,28 @@ public abstract class Expr {
         public Ident(Token name) { this.name = name; }
         @Override public <R> R accept(Visitor<R> v) { return v.visitIdent(this); }
     }
+    public static final class Unary extends Expr {
+        public final Token op; public final Expr right;
+        public Unary(Token op, Expr right) { this.op = op; this.right = right; }
+        @Override public <R> R accept(Visitor<R> v) { return v.visitUnary(this); }
+    }
+    // Zagradjen izraz
+    public static final class Grouping extends Expr {
+        public final Expr expr;
+        public Grouping(Expr expr) { this.expr = expr; }
+        @Override public <R> R accept(Visitor<R> v) { return v.visitGrouping(this); }
+    }
+
+    public static final class Index extends Expr {
+        public Token name; // IDENT
+        public List<Expr> indices = new ArrayList<>();
+        public Index(Token name, List<Expr> indices) { this.name = name; this.indices = indices; }
+        public Index(Token name) { this.name = name; }
+        public Index(){}
+        @Override public <R> R accept(Visitor<R> v) { return v.visitIndex(this); }
+    }
+
+
 
 
 }
-*/
