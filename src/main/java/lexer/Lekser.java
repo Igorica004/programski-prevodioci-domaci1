@@ -36,8 +36,8 @@ public class Lekser {
         klase.add(new Pair(TokenType.SUBTRACT, "potkresi"));
         klase.add(new Pair(TokenType.MULTIPLY, "puta"));
         klase.add(new Pair(TokenType.DIVIDE, "podeljeno"));
-        klase.add(new Pair(TokenType.TRUE, "pozitivno"));
-        klase.add(new Pair(TokenType.FALSE, "pogresno"));
+        klase.add(new Pair(TokenType.BOOL_LIT, "pozitivno"));
+        klase.add(new Pair(TokenType.BOOL_LIT, "pogresno"));
         klase.add(new Pair(TokenType.BREAK, "prekini"));
         klase.add(new Pair(TokenType.CONT, "produzi"));
         klase.add(new Pair(TokenType.RETURN, "posalji"));
@@ -70,7 +70,6 @@ public class Lekser {
         klase.add(new Pair(TokenType.INT_LIT, "[+-]?[0-9]+"));
         klase.add(new Pair(TokenType.CHAR_LIT, "'([^'\\\\]|\\\\[nrt\\\\'])'"));
         klase.add(new Pair(TokenType.STRING_LIT, "\"([^\"\\\\]|\\\\[nrt])*\""));
-        klase.add(new Pair(TokenType.BOOL_LIT, "(pozitivno|pogresno)"));
         klase.add(new Pair(TokenType.WHITESPACE, "\\s+")); // Da li sme da stoji na vrhu? Zbog optimizacije
         klase.add(new Pair(TokenType.COMMENT, "//.*|/\\*(.|\\R)*?\\*/")); // da li mora komentar?
         klase.add(new Pair(TokenType.IDENT, "[a-zA-Z][a-zA-Z0-9_]*")); // mora da bude posle rezervisanih reci. Sme iznad string literala jer ne moze poceti sa "

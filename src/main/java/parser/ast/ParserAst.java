@@ -42,7 +42,7 @@ public final class ParserAst {
     private Ast.TopItem parseProcDecl(){
         Ast.ProcDecl pd = new Ast.ProcDecl();
         consume(PROC,"expected PROC");
-        if(!match(IDENT)) pd.returnType = parseType();
+        if(!check(IDENT)) pd.returnType = parseType();
         else pd.returnType = new Type(Type.Kind.VOID,null,1);
         pd.name = consume(IDENT,"expected IDENT");
         consume(LPAREN,"expected LPAREN");
@@ -54,7 +54,7 @@ public final class ParserAst {
             } while (match(SEMICOL));
         }
         consume(RPAREN,"expected RPAREN");
-        pd.varBlock = (Ast.VarBlock) parseVarBlock();
+        if(check(VAR_BLOCK)) pd.varBlock = (Ast.VarBlock) parseVarBlock();
         pd.body = parseBlock();
         return pd;
     }
@@ -129,7 +129,7 @@ public final class ParserAst {
         while(check(LBRACK)){
             rank++;
             consume(LBRACK, null);
-            t.dims.add(parseStmt());
+            t.dims.add(parseExpr());
             consume(RBRACK, "expected ']'");
         }
         t.rank = rank;
@@ -199,14 +199,14 @@ public final class ParserAst {
         Stmt.DodelaStmt ds = new Stmt.DodelaStmt();
         if(check(IDENT)) {
             ds.lvalue = consume(IDENT, "expected identifier");
-            if (match(LBRACK)) {
-                while(match(LBRACK)) {
-                    ds.dims.add(parseExpr());
-                    consume(RBRACK, "expected ']'");
+            if (match(LBRACK)||check(DOT)) {
+                while(check(LBRACK) || check(DOT)) {
+                    if(match(LBRACK)) {
+                        ds.dims.add(parseExpr());
+                        consume(RBRACK, "expected ']'");
+                    }
+                    if(match(DOT)) ds.indentifiers.add(consume(DOT, "expected identifier"));
                 }
-            } else {
-                while(match(DOT))
-                    ds.indentifiers.add(consume(IDENT, "expected identifier"));
             }
         }
         else

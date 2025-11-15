@@ -51,8 +51,6 @@ public enum TokenType {
     STRING_LIT,
     BOOL_LIT,
     IDENT,
-    TRUE,
-    FALSE,
     WHITESPACE,
     COMMENT,
     ERROR,

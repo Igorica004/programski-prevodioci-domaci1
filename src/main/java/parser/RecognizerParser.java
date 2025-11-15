@@ -35,24 +35,23 @@ public final class RecognizerParser {
         consume(MAIN,"expected MAIN");
         parseMain();
         consume(EOF, "expected EOF");
-        System.out.print("asdasd");
+        System.out.print("Program je parsirabilan");
     }
 
     // proc_decl = PROC [type] IDENT LPAREN [type IDENT {SEMICOL type IDENT}] [var_block] RPAREN block
-    private void parseProcDecl(){
-        consume(PROC,"expected PROC");
-        if(!match(IDENT)) parseType();
-        consume(IDENT,"expected IDENT");
-        consume(LPAREN,"expected LPAREN");
-        if(!match(RPAREN))
-        {
+    private void parseProcDecl() {
+        consume(PROC, "expected PROC");
+        if (!check(IDENT)) parseType();
+        consume(IDENT, "expected IDENT");
+        consume(LPAREN, "expected LPAREN");
+        if (!match(RPAREN)) {
             do {
                 parseType();
                 consume(IDENT, "identifier expected");
             } while (match(SEMICOL));
         }
-        consume(RPAREN,"expected RPAREN");
-        if(checkNext(VAR)) parseVarBlock();
+        consume(RPAREN, "expected RPAREN");
+        if (match(VAR_BLOCK)) parseVarBlock();
         parseBlock();
     }
 
@@ -107,7 +106,7 @@ public final class RecognizerParser {
         while (check(LBRACK))
         {
             consume(LBRACK, "expected '['");
-            parseType();
+            parseExpr();
             consume(RBRACK, "expected ']'");
         }
     }
@@ -168,15 +167,17 @@ public final class RecognizerParser {
     // dodela_stmt = lvalue ASSIGN expr SEMICOL
     private void parseDodelaStmt() {
         if(match(IDENT)) {
-            if(check(LBRACK))
+            if(check(LBRACK) || check(DOT))
             {
-                while(match(LBRACK)) {
-                    parseExpr();
-                    consume(RBRACK, "expected ']'");
+                while(check(LBRACK) || check(DOT))
+                {
+                    if (match(LBRACK))
+                    {
+                        parseExpr();
+                        consume(RBRACK, "expected ']'");
+                    }
+                    if (match(DOT)) consume(IDENT, "expected identifier");
                 }
-            }
-            else {
-                while(match(DOT)) consume(IDENT, "expected identifier");
             }
         }
         else
@@ -255,14 +256,18 @@ public final class RecognizerParser {
     private void parsePrimary() {
         if(match(IDENT))
         {
-            if(check(LBRACK))
+            if(check(LBRACK) || check(DOT))
             {
-                while(match(LBRACK)) {
-                    parseExpr();
-                    consume(RBRACK, "expected ']'");
+                while(check(LBRACK) || check(DOT))
+                {
+                    if (match(LBRACK))
+                    {
+                        parseExpr();
+                        consume(RBRACK, "expected ']'");
+                    }
+                    if (match(DOT)) consume(IDENT, "expected identifier");
                 }
             }
-            else if(match(DOT)) consume(IDENT, "expected identifier");
             else if(match(LPAREN))
             {
                 do parseExpr();

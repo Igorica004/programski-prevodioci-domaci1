@@ -23,8 +23,7 @@ stmt = dodela_stmt
 
 dodela_stmt = lvalue ASSIGN expr SEMICOL;
 
-lvalue = IDENT {DOT IDENT}
-       | IDENT {LBRACK expr RBRACK}
+lvalue = IDENT { (DOT IDENT) | (LBRACK expr RBRACK) };
 
 if_stmt = IF LPAREN expr RPAREN THEN block [ELSE block];
 for_stmt = FOR LPAREN dodela_stmt|(IDENT SEMICOL) expr SEMICOL dodela_stmt RPAREN block;
