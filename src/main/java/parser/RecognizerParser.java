@@ -168,10 +168,14 @@ public final class RecognizerParser {
     // dodela_stmt = lvalue ASSIGN expr SEMICOL
     private void parseDodelaStmt() {
         if(match(IDENT)) {
-            if (match(LBRACK)) {
-                parseExpr();
-                consume(RBRACK, "expected ']'");
-            } else {
+            if(check(LBRACK))
+            {
+                while(match(LBRACK)) {
+                    parseExpr();
+                    consume(RBRACK, "expected ']'");
+                }
+            }
+            else {
                 while(match(DOT)) consume(IDENT, "expected identifier");
             }
         }
@@ -251,10 +255,12 @@ public final class RecognizerParser {
     private void parsePrimary() {
         if(match(IDENT))
         {
-            if(match(LBRACK))
+            if(check(LBRACK))
             {
-                parseExpr();
-                consume(RBRACK, "expected ']'");
+                while(match(LBRACK)) {
+                    parseExpr();
+                    consume(RBRACK, "expected ']'");
+                }
             }
             else if(match(DOT)) consume(IDENT, "expected identifier");
             else if(match(LPAREN))

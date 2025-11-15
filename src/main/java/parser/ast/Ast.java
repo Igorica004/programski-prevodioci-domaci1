@@ -76,7 +76,7 @@ public final class Ast {
 
         public Token baseType;
         public int rank;      // broj [] zagrada, tj dimenzija
-        public List<Integer> dims = new ArrayList<>();
+        public List<Stmt> dims = new ArrayList<>();
         public Type() {}
         public Type(Kind kind, Token baseType, int rank) {
             this.kind = kind; this.baseType = baseType; this.rank = rank;

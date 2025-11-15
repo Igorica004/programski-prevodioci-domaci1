@@ -129,12 +129,8 @@ public final class ParserAst {
         while(check(LBRACK)){
             rank++;
             consume(LBRACK, null);
-            if(!match(FLOAT_LIT,CHAR_LIT,STRING_LIT,BOOL_LIT,LBRACE,NOT)){
-                    t.dims.add(Integer.parseInt(parseAdd()));
-                    error(peek(),"Dimension must be an integer");
-                consume(RBRACK, "expected ']'");
-            }
-            else error(peek(), "Can not define array dimension");
+            t.dims.add(parseStmt());
+            consume(RBRACK, "expected ']'");
         }
         t.rank = rank;
         return t;
@@ -204,8 +200,10 @@ public final class ParserAst {
         if(check(IDENT)) {
             ds.lvalue = consume(IDENT, "expected identifier");
             if (match(LBRACK)) {
-                ds.rvalue = parseExpr();
-                consume(RBRACK, "expected ']'");
+                while(match(LBRACK)) {
+                    ds.dims.add(parseExpr());
+                    consume(RBRACK, "expected ']'");
+                }
             } else {
                 while(match(DOT))
                     ds.indentifiers.add(consume(IDENT, "expected identifier"));
