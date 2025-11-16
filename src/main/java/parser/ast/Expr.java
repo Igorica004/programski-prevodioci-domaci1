@@ -10,10 +10,10 @@ public abstract class Expr {
         R visitLiteral(Literal e);
         R visitIdent(Ident e);
         R visitUnary(Unary e);
-        R visitIndex(Index e)
+        R visitIndex(Index e);
         R visitGrouping(Grouping e);
-        R visitCall(Call e);
         R visitBinary(Binary e);
+        R visitExprList(ExprList e);
     }
 
     public abstract <R> R accept(Visitor<R> v);
@@ -35,6 +35,8 @@ public abstract class Expr {
 
     public static final class Ident extends Expr {
         public final Token name; // IDENT
+        public List<Expr> dims = new ArrayList<>();
+        public List<Token> indentifiers = new ArrayList<>();
         public Ident(Token name) { this.name = name; }
         @Override public <R> R accept(Visitor<R> v) { return v.visitIdent(this); }
     }
@@ -57,6 +59,14 @@ public abstract class Expr {
         public Index(Token name) { this.name = name; }
         public Index(){}
         @Override public <R> R accept(Visitor<R> v) { return v.visitIndex(this); }
+    }
+
+    public static final class ExprList extends Expr {
+        public List<Expr> exprs = new ArrayList<>();
+        public ExprList() {}
+
+        @Override
+        public <R> R accept(Visitor<R> v) { return v.visitExprList(this); }
     }
 
 

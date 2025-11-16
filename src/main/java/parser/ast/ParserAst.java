@@ -199,7 +199,7 @@ public final class ParserAst {
         Stmt.DodelaStmt ds = new Stmt.DodelaStmt();
         if(check(IDENT)) {
             ds.lvalue = consume(IDENT, "expected identifier");
-            if (match(LBRACK)||check(DOT)) {
+            if (check(LBRACK)||check(DOT)) {
                 while(check(LBRACK) || check(DOT)) {
                     if(match(LBRACK)) {
                         ds.dims.add(parseExpr());
@@ -291,16 +291,40 @@ public final class ParserAst {
     }
 
     private Expr parsePrimary(){
-        if(match(IDENT)){
-            Expr expr;
-            Token ident = previous();
-            if(check(LBRACK)){
-                expr =
-                while(match(LBRACK)){
+        Expr expr;
+        if(check(IDENT)){
+            if(check(LBRACK) || check(DOT)){
+                Token ident = previous();
+                expr = new Expr.Ident(ident);
+                while(check(LBRACK) || check(DOT)){
+                    if(match(LBRACK)){
+                        ((Expr.Ident)expr).dims.add(parseExpr());
+                        consume(RBRACK, "expected ']'");
 
+                    }
+                    if(match(DOT))
+                        ((Expr.Ident)expr).indentifiers.add(consume(IDENT, "expected identifier"));
                 }
-            } else if
+            }
+            else if(check(LPAREN)){
+
+            }
         }
+    }
+
+    private Expr parseStructLit() {
+        Expr expr = parseExpr();
+        if (!check(SEMICOL)){
+            consume(RBRACE, "expected '}'");
+            return expr;
+        }
+        Expr.ExprList e = new Expr.ExprList();
+        e.exprs.add(expr);
+        while(match(SEMICOL)){
+            e.exprs.add(parseExpr());
+        }
+        consume(RBRACE, "expected '}'");
+        return e;
     }
 
     private boolean match(TokenType... types) {
