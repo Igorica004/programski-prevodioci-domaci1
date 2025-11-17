@@ -291,25 +291,43 @@ public final class ParserAst {
     }
 
     private Expr parsePrimary(){
-        Expr expr;
         if(check(IDENT)){
+            Expr.Ident expr = new Expr.Ident();
             if(check(LBRACK) || check(DOT)){
                 Token ident = previous();
                 expr = new Expr.Ident(ident);
                 while(check(LBRACK) || check(DOT)){
                     if(match(LBRACK)){
-                        ((Expr.Ident)expr).dims.add(parseExpr());
+                        expr.dims.add(parseExpr());
                         consume(RBRACK, "expected ']'");
+                        expr.references.add(Expr.Ident.Ref.ARRAY);
 
                     }
-                    if(match(DOT))
-                        ((Expr.Ident)expr).indentifiers.add(consume(IDENT, "expected identifier"));
+                    if(match(DOT)){
+                        expr.indentifiers.add(consume(IDENT, "expected identifier"));
+                        expr.references.add(Expr.Ident.Ref.STRUCT);
+                    }
                 }
             }
             else if(check(LPAREN)){
+                do
+                    expr.params.add(parseExpr());
+                while(match(SEMICOL));
+                consume(RPAREN, "expected ')'");
 
             }
+            return expr;
         }
+        else if(match(LBRACE)) return parseStructLit();
+        else if(match(NOT)) return new Expr.Unary(previous(),parsePrimary());
+        else if(match(LPAREN)){
+            Expr expr = parseExpr();
+            consume(RPAREN, "expected ')'");
+            return new Expr.Grouping(expr);
+        }
+        else if(match(INT_LIT,FLOAT_LIT,CHAR_LIT,STRING_LIT,BOOL_LIT)) return new Expr.Literal(previous());
+        error(peek(),"Error");
+        return null;
     }
 
     private Expr parseStructLit() {

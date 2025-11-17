@@ -10,7 +10,6 @@ public abstract class Expr {
         R visitLiteral(Literal e);
         R visitIdent(Ident e);
         R visitUnary(Unary e);
-        R visitIndex(Index e);
         R visitGrouping(Grouping e);
         R visitBinary(Binary e);
         R visitExprList(ExprList e);
@@ -28,15 +27,18 @@ public abstract class Expr {
 
     public static final class Literal extends Expr {
         public final Token token;
-        public final Object value; // mora da se castuje u odgovaracjuci tip
-        public Literal(Token token, int value) { this.token = token; this.value = value; }
+        public Literal(Token token) { this.token = token; }
         @Override public <R> R accept(Visitor<R> v) { return v.visitLiteral(this); }
     }
 
     public static final class Ident extends Expr {
-        public final Token name; // IDENT
+        public enum Ref{ARRAY, STRUCT}
+        public Token name; // IDENT
         public List<Expr> dims = new ArrayList<>();
         public List<Token> indentifiers = new ArrayList<>();
+        public List<Expr> params = new ArrayList<>();
+        public List<Ref> references = new ArrayList<>();
+        public Ident(){}
         public Ident(Token name) { this.name = name; }
         @Override public <R> R accept(Visitor<R> v) { return v.visitIdent(this); }
     }
@@ -50,15 +52,6 @@ public abstract class Expr {
         public final Expr expr;
         public Grouping(Expr expr) { this.expr = expr; }
         @Override public <R> R accept(Visitor<R> v) { return v.visitGrouping(this); }
-    }
-
-    public static final class Index extends Expr {
-        public Token name; // IDENT
-        public List<Expr> indices = new ArrayList<>();
-        public Index(Token name, List<Expr> indices) { this.name = name; this.indices = indices; }
-        public Index(Token name) { this.name = name; }
-        public Index(){}
-        @Override public <R> R accept(Visitor<R> v) { return v.visitIndex(this); }
     }
 
     public static final class ExprList extends Expr {
