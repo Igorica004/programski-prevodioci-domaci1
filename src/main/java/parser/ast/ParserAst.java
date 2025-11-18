@@ -31,9 +31,7 @@ public final class ParserAst {
             else if (check(VAR_BLOCK)) break;
             else error(peek(),"Error");
         }
-        consume(VAR_BLOCK,"expected VAR_BLOCK");
         p.items.add(parseVarBlock());
-        consume(MAIN,"expected MAIN");
         p.items.add(parseMain());
         consume(EOF, "expected EOF");
         return p;
@@ -43,14 +41,15 @@ public final class ParserAst {
         Ast.ProcDecl pd = new Ast.ProcDecl();
         consume(PROC,"expected PROC");
         if(!check(IDENT)) pd.returnType = parseType();
-        else pd.returnType = new Type(Type.Kind.VOID,null,1);
+        else pd.returnType = new Type(Type.Kind.VOID);
         pd.name = consume(IDENT,"expected IDENT");
         consume(LPAREN,"expected LPAREN");
         if(!match(RPAREN))
         {
             do {
+                Type t = parseType();
                 Token ident = consume(IDENT, "identifier expected");
-                pd.params.add(new Ast.Param(ident,parseType()));
+                pd.params.add(new Ast.Param(ident,t));
             } while (match(SEMICOL));
         }
         consume(RPAREN,"expected RPAREN");
@@ -123,16 +122,13 @@ public final class ParserAst {
         else if(match(CHAR)) t.kind = Type.Kind.CHAR;
         else if(match(STRING)) t.kind = Type.Kind.STRING;
         else if(match(BOOL)) t.kind = Type.Kind.BOOL;
-        else t.kind = Type.Kind.IDENT;
+        else if(match(IDENT)) t.kind = Type.Kind.IDENT;
 
-        int rank=1;
         while(check(LBRACK)){
-            rank++;
             consume(LBRACK, null);
             t.dims.add(parseExpr());
             consume(RBRACK, "expected ']'");
         }
-        t.rank = rank;
         return t;
     }
     private List<Stmt> parseBlock() {
@@ -151,7 +147,10 @@ public final class ParserAst {
             return parseIfStmt();
         if (match(FOR))
             return parseForStmt();
-        if (match(BREAK)) consume(SEMICOL,"expected ';'");
+        if (match(BREAK)) {
+            consume(SEMICOL,"expected ';'");
+            return new Stmt.Break();
+        }
         if (match(RETURN)) {
             Stmt.Return r = new Stmt.Return();
             r.expr = parseExpr();
@@ -198,14 +197,18 @@ public final class ParserAst {
     private Stmt parseDodelaStmt(){
         Stmt.DodelaStmt ds = new Stmt.DodelaStmt();
         if(check(IDENT)) {
-            ds.lvalue = consume(IDENT, "expected identifier");
+            ds.lvalue.add(consume(IDENT, "expected identifier"));
             if (check(LBRACK)||check(DOT)) {
                 while(check(LBRACK) || check(DOT)) {
                     if(match(LBRACK)) {
                         ds.dims.add(parseExpr());
                         consume(RBRACK, "expected ']'");
+                        ds.references.add(Expr.Ident.Ref.ARRAY);
                     }
-                    if(match(DOT)) ds.indentifiers.add(consume(DOT, "expected identifier"));
+                    if(match(DOT)){
+                        ds.lvalue.add(consume(IDENT, "expected identifier"));
+                        ds.references.add(Expr.Ident.Ref.STRUCT);
+                    }
                 }
             }
         }
@@ -293,9 +296,9 @@ public final class ParserAst {
     private Expr parsePrimary(){
         if(check(IDENT)){
             Expr.Ident expr = new Expr.Ident();
+            Token ident = consume(IDENT, "expected identifier");
+            expr.name.add(ident);
             if(check(LBRACK) || check(DOT)){
-                Token ident = previous();
-                expr = new Expr.Ident(ident);
                 while(check(LBRACK) || check(DOT)){
                     if(match(LBRACK)){
                         expr.dims.add(parseExpr());
@@ -304,12 +307,12 @@ public final class ParserAst {
 
                     }
                     if(match(DOT)){
-                        expr.indentifiers.add(consume(IDENT, "expected identifier"));
+                        expr.name.add(consume(IDENT, "expected identifier"));
                         expr.references.add(Expr.Ident.Ref.STRUCT);
                     }
                 }
             }
-            else if(check(LPAREN)){
+            else if(match(LPAREN)){
                 do
                     expr.params.add(parseExpr());
                 while(match(SEMICOL));

@@ -33,17 +33,17 @@ public abstract class Expr {
 
     public static final class Ident extends Expr {
         public enum Ref{ARRAY, STRUCT}
-        public Token name; // IDENT
         public List<Expr> dims = new ArrayList<>();
-        public List<Token> indentifiers = new ArrayList<>();
+        public List<Token> name = new ArrayList<>();
         public List<Expr> params = new ArrayList<>();
         public List<Ref> references = new ArrayList<>();
         public Ident(){}
-        public Ident(Token name) { this.name = name; }
+        public Ident(List<Token> name) { this.name = name; }
         @Override public <R> R accept(Visitor<R> v) { return v.visitIdent(this); }
     }
     public static final class Unary extends Expr {
-        public final Token op; public final Expr right;
+        public final Token op;
+        public final Expr right;
         public Unary(Token op, Expr right) { this.op = op; this.right = right; }
         @Override public <R> R accept(Visitor<R> v) { return v.visitUnary(this); }
     }
@@ -61,8 +61,4 @@ public abstract class Expr {
         @Override
         public <R> R accept(Visitor<R> v) { return v.visitExprList(this); }
     }
-
-
-
-
 }

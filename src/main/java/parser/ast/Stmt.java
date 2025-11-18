@@ -2,6 +2,7 @@ package parser.ast;
 
 import lexer.token.Token;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Stmt {
@@ -9,27 +10,14 @@ public abstract class Stmt {
     public interface Visitor<R> {
         R visitVarDecl(VarDecl s);
         R visitReturn(Return s);
-        R visitAssign(Assign s);
-        R visitCallStmt(CallStmt s);
         R visitIfStmt(IfStmt s);
-        R visitBeginFor(BeginFor s);
         R visitContinue(Continue s);
+        R visitBreak(Break s);
         R visitForStmt(ForStmt s);
         R visitProcStmt(ProcStmt s);
         R visitDodelaStmt(DodelaStmt s);
     }
     public abstract <R> R accept(Visitor<R> v);
-
-    public static final class BeginFor extends Stmt {
-        public Token var;   // IDENT
-        public Expr from;   // aexpr
-        public Expr to;     // aexpr
-        public List<Stmt> body = new java.util.ArrayList<>();
-        public BeginFor(Token var, Expr from, Expr to, List<Stmt> body) {
-            this.var = var; this.from = from; this.to = to; this.body = body;
-        }
-        @Override public <R> R accept(Visitor<R> v) { return v.visitBeginFor(this); }
-    }
 
     public static final class VarDecl extends Stmt {
         public List<Expr> dims = new java.util.ArrayList<>();
@@ -61,12 +49,12 @@ public abstract class Stmt {
         @Override public <R> R accept(Visitor<R> v) { return v.visitForStmt(this); }
     }
     public static final class DodelaStmt extends Stmt {
-        public Token lvalue;
-        public Expr rvalue;
         public List<Expr> dims = new java.util.ArrayList<>();
-        public List<Token> indentifiers = new java.util.ArrayList<>();
+        public List<Token> lvalue = new java.util.ArrayList<>();
+        public List<Expr.Ident.Ref> references = new ArrayList<>();
+        public Expr rvalue;
         public DodelaStmt() {}
-        public DodelaStmt(Token lvalue, Expr rvalue) {
+        public DodelaStmt(List<Token> lvalue, Expr rvalue) {
             this.lvalue = lvalue; this.rvalue = rvalue;
         }
         @Override
@@ -75,7 +63,7 @@ public abstract class Stmt {
 
     public static final class ProcStmt extends Stmt {
         public Token name;
-        public List<Expr> args;
+        public List<Expr> args = new ArrayList<>();
 
         @Override
         public <R> R accept(Visitor<R> v) {
@@ -95,4 +83,8 @@ public abstract class Stmt {
         @Override public <R> R accept(Visitor<R> v) { return v.visitContinue(null); }
     }
 
+    public static final class Break extends Stmt {
+        public Break(){}
+        @Override public <R> R accept (Visitor<R> v) { return v.visitBreak(null);}
+    }
 }

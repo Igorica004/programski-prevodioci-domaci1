@@ -19,9 +19,9 @@ public final class RecognizerParser {
     //          main_blok
     //          EOF;
     public void parseProgram() {
-        consume(NAMESPACE,"expected NAMESPACE");
-        consume(IDENT,"expected identifier");
-        consume(SEMICOL, "expected ';'" );
+        consume(NAMESPACE,"planiran program");
+        consume(IDENT,"planirana promenljiva");
+        consume(SEMICOL, "planiran ';'" );
         while(true)
         {
             if(check(PROC)) parseProcDecl();
@@ -30,73 +30,73 @@ public final class RecognizerParser {
             else if (check(VAR_BLOCK)) break;
             else error(peek(),"Error");
         }
-        consume(VAR_BLOCK,"expected VAR_BLOCK");
+        consume(VAR_BLOCK,"planiran promenljive blok");
         parseVarBlock();
-        consume(MAIN,"expected MAIN");
+        consume(MAIN,"planiran pocni blok");
         parseMain();
-        consume(EOF, "expected EOF");
-        System.out.print("Program je parsirabilan");
+        consume(EOF, "planiran EOF");
+        System.out.println("Program je parsirabilan");
     }
 
     // proc_decl = PROC [type] IDENT LPAREN [type IDENT {SEMICOL type IDENT}] [var_block] RPAREN block
     private void parseProcDecl() {
-        consume(PROC, "expected PROC");
+        consume(PROC, "planirana procedura");
         if (!check(IDENT)) parseType();
-        consume(IDENT, "expected IDENT");
-        consume(LPAREN, "expected LPAREN");
+        consume(IDENT, "planirana promenljiva");
+        consume(LPAREN, "planirana '('");
         if (!match(RPAREN)) {
             do {
                 parseType();
-                consume(IDENT, "identifier expected");
+                consume(IDENT, "planirana promenljiva");
             } while (match(SEMICOL));
         }
-        consume(RPAREN, "expected RPAREN");
+        consume(RPAREN, "planirana ')'");
         if (match(VAR_BLOCK)) parseVarBlock();
         parseBlock();
     }
 
     // struct_decl = STRUCT IDENT LBRACE {type IDENT SEMICOL} RBRACE
     private void parseStructDecl(){
-        consume(STRUCT,"expected STRUCT");
-        consume(IDENT,"expected IDENT");
-        consume(LBRACE,"expected '{");
+        consume(STRUCT,"planiran postoji blok");
+        consume(IDENT,"planirana promenljiva");
+        consume(LBRACE,"planirana '{");
         while(!match(RBRACE))
         {
             parseType();
-            consume(IDENT,"identifier expected");
-            consume(SEMICOL, "expected SEMICOL");
+            consume(IDENT,"planirana promenljiva");
+            consume(SEMICOL, "planirana ';'");
         }
     }
 
     // enum_decl = ENUM IDENT LBRACE IDENT SEMICOL {IDENT SEMICOL} RBRACE
     private void parseEnumDecl(){
-        consume(ENUM,"expected ENUM");
-        consume(IDENT,"identifier expected");
-        consume(LBRACE,"expected '{");
+        consume(ENUM,"planiran popis");
+        consume(IDENT,"planirana promenljiva");
+        consume(LBRACE,"planirana '{");
         do {
-            consume(IDENT, "identifier expected");
-            consume(SEMICOL, "expected SEMICOL");
+            consume(IDENT, "planirana promenljiva");
+            consume(SEMICOL, "planirana ';'");
         } while (!match(RBRACE));
     }
 
     // var_blok = VAR_BLOCK LBRACE {var_decl} RBRACE
     private void parseVarBlock(){
-        consume(LBRACE,"expected '{'");
+        consume(LBRACE,"planirana '{'");
         while(!match(RBRACE)) parseVarDecl();
     }
 
     // var_decl = VAR type IDENT [ASSIGN expr] SEMICOL;
     private void parseVarDecl(){
-        consume(VAR, "expected VAR");
+        consume(VAR, "planirano postavi");
         parseType();
-        consume(IDENT, "identifier expected");
+        consume(IDENT, "planirana promenljiva");
         if(match(ASSIGN)) parseExpr();
-        consume(SEMICOL,"expected ';'");
+        consume(SEMICOL,"planirana ';'");
     }
 
     // main_blok = MAIN LBRACE {stmt} RBRACE;
     private void parseMain(){
-        consume(LBRACE,"expected '{'");
+        consume(LBRACE,"planirana '{'");
         while(!match(RBRACE)) parseStmt();
     }
 
@@ -105,15 +105,15 @@ public final class RecognizerParser {
         if (!match(INT,FLOAT,CHAR,STRING,BOOL,IDENT)) error(peek(),"Error");
         while (check(LBRACK))
         {
-            consume(LBRACK, "expected '['");
+            consume(LBRACK, "planirana '['");
             parseExpr();
-            consume(RBRACK, "expected ']'");
+            consume(RBRACK, "planirana ']'");
         }
     }
 
     //block = LBRACE {stmt} RBRACE
     private void parseBlock() {
-        consume(LBRACE, "expected '{'");
+        consume(LBRACE, "planirana '{'");
         while(!match(RBRACE)) parseStmt();
     }
 
@@ -132,35 +132,35 @@ public final class RecognizerParser {
         }
         else if (match(IF)) parseIfStmt();
         else if (match(FOR)) parseForStmt();
-        else if (match(BREAK)) consume(SEMICOL,"expected ';'");
+        else if (match(BREAK)) consume(SEMICOL,"planirana ';'");
         else if (match(RETURN))
         {
             parseExpr();
-            consume(SEMICOL,"expected ';'");
+            consume(SEMICOL,"planirana ';'");
         }
-        else if (match(CONT)) consume(SEMICOL,"expected ';'");
+        else if (match(CONT)) consume(SEMICOL,"planirana ';'");
 
     }
 
     // if_stmt = IF LPAREN expr RPAREN THEN block [ELSE block]
     private void parseIfStmt() {
-        consume(LPAREN, "expected '('");
+        consume(LPAREN, "planirana '('");
         parseExpr();
-        consume(RPAREN, "expected ')'");
-        consume(THEN, "expected pa");
+        consume(RPAREN, "planirana ')'");
+        consume(THEN, "planirano pa");
         parseBlock();
         if(match(ELSE)) parseBlock();
     }
 
     // for_stmt = FOR LPAREN dodela_stmt|(IDENT SEMICOL) expr SEMICOL dodela_stmt RPAREN block
     private void parseForStmt() {
-        consume(LPAREN, "expected '('");
-        if(checkNext(SEMICOL)) consume(IDENT, "expected identifier");
+        consume(LPAREN, "planirana '('");
+        if(checkNext(SEMICOL)) consume(IDENT, "planirana promenljiva");
         else parseDodelaStmt();
         parseExpr();
-        consume(SEMICOL, "expected ';'");
+        consume(SEMICOL, "planirana ';'");
         parseDodelaStmt();
-        consume(RPAREN, "expected ')'");
+        consume(RPAREN, "planirana ')'");
         parseBlock();
     }
 
@@ -174,30 +174,30 @@ public final class RecognizerParser {
                     if (match(LBRACK))
                     {
                         parseExpr();
-                        consume(RBRACK, "expected ']'");
+                        consume(RBRACK, "planirana ']'");
                     }
-                    if (match(DOT)) consume(IDENT, "expected identifier");
+                    if (match(DOT)) consume(IDENT, "planirana promenljiva");
                 }
             }
         }
         else
             error(peek(),"Dodela statement must start with identifier");
-        consume(ASSIGN, "expected ASSIGN");
+        consume(ASSIGN, "planirano podesi");
         parseExpr();
-        consume(SEMICOL, "expected ';'");
+        consume(SEMICOL, "planirana ';'");
     }
 
     // proc_stmt = IDENT LPAREN [expr {SEMICOL expr}] RPAREN SEMICOL
     private void parseProcStmt(){
-        consume(IDENT,"expected identifier");
-        consume(LPAREN, "expected '('");
+        consume(IDENT,"planirana promenljiva");
+        consume(LPAREN, "planirana '('");
         if(!check(RPAREN))
         {
             do parseExpr();
             while (match(SEMICOL));
         }
-        consume(RPAREN, "expected ')'");
-        consume(SEMICOL, "expected ';'");
+        consume(RPAREN, "planirana ')'");
+        consume(SEMICOL, "planirana ';'");
     }
 
     // expr = or_expr
@@ -263,16 +263,16 @@ public final class RecognizerParser {
                     if (match(LBRACK))
                     {
                         parseExpr();
-                        consume(RBRACK, "expected ']'");
+                        consume(RBRACK, "planirana ']'");
                     }
-                    if (match(DOT)) consume(IDENT, "expected identifier");
+                    if (match(DOT)) consume(IDENT, "planirana promenljiva");
                 }
             }
             else if(match(LPAREN))
             {
                 do parseExpr();
                 while (match(SEMICOL));
-                consume(RPAREN, "expected ')'");
+                consume(RPAREN, "planirana ')'");
             }
         }
         else if(match(LBRACE)) parseStructLit();
@@ -280,7 +280,7 @@ public final class RecognizerParser {
         else if(match(LPAREN))
         {
             parseExpr();
-            consume(RPAREN, "expected ')'");
+            consume(RPAREN, "planirana ')'");
         }
         else if(!match(INT_LIT,FLOAT_LIT,CHAR_LIT,STRING_LIT,BOOL_LIT)) error(peek(),"Error");
     }
@@ -289,7 +289,7 @@ public final class RecognizerParser {
     private void parseStructLit() {
         do parseExpr();
         while (match(SEMICOL));
-        consume(RBRACE, "expected '}'");
+        consume(RBRACE, "planirana '}'");
     }
 
     private boolean match(TokenType... types) {

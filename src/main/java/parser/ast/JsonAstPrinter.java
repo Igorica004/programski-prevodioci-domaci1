@@ -1,207 +1,306 @@
 package parser.ast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.*;
+import lexer.token.Token;
 
 
 public final class JsonAstPrinter implements
         Expr.Visitor<JsonNode>,
-        Stmt.Visitor<JsonNode> {
+        Stmt.Visitor<JsonNode>,
+        Ast.Visitor<JsonNode> {
 
     private static final ObjectMapper M = new ObjectMapper();
 
     public String print(Ast.Program p) {
         try {
-            ObjectNode root = M.createObjectNode();
-            root.put("type", "program");
-            root.put("explicitProgram", p.explicitProgram);
-            ArrayNode items = M.createArrayNode();
-            for (Ast.TopItem it : p.items) items.add(printTopItem(it));
-            root.set("items", items);
+            ObjectNode root = (ObjectNode) p.accept(this);
             return M.writerWithDefaultPrettyPrinter().writeValueAsString(root);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private JsonNode printTopItem(Ast.TopItem it) {
-        if (it instanceof Ast.TopVarDecl v) {
-            ObjectNode o = M.createObjectNode();
-            o.put("kind", "topVarDecl");
-            o.set("decl", v.decl.accept(this));
-            return o;
+    @Override
+    public JsonNode visitLiteral(Expr.Literal e) {
+        ObjectNode o = M.createObjectNode();
+        o.put("expr", "literal");
+        o.put("value", e.token.lexeme);
+        return o;
+    }
+
+    @Override
+    public JsonNode visitIdent(Expr.Ident e) {
+        ObjectNode o = M.createObjectNode();
+        o.put("expr", "ident");
+
+        ArrayNode name = M.createArrayNode();
+        for (Token t : e.name) name.add(t.lexeme);
+        o.set("name", name);
+
+        if (!e.dims.isEmpty()) {
+            ArrayNode dims = M.createArrayNode();
+            for (Expr ex : e.dims) dims.add(ex.accept(this));
+            o.set("dims", dims);
         }
-        if (it instanceof Ast.FuncDef f) {
-            ObjectNode o = M.createObjectNode();
-            o.put("kind", "funcDef");
-            o.put("name", f.name.lexeme);
-            ObjectNode rt = M.createObjectNode();
-            rt.put("base", f.returnType.kind == Ast.Type.Kind.INT ? f.returnType.baseType.lexeme : "implicit void");
-            rt.put("rank", f.returnType.rank);
-            o.set("returnType", rt);
+
+        if (!e.references.isEmpty()) {
+            ArrayNode refs = M.createArrayNode();
+            for (Expr.Ident.Ref r : e.references) refs.add(r.name());
+            o.set("references", refs);
+        }
+
+        if (!e.params.isEmpty()) {
             ArrayNode params = M.createArrayNode();
-            for (Ast.Param p : f.params) {
-                ObjectNode po = M.createObjectNode();
-                po.put("name", p.name.lexeme);
-                ObjectNode t = M.createObjectNode();
-                t.put("base", p.type.baseType.lexeme);
-                t.put("rank", p.type.rank);
-                po.set("type", t);
-                params.add(po);
-            }
+            for (Expr p : e.params) params.add(p.accept(this));
             o.set("params", params);
-            ArrayNode body = M.createArrayNode();
-            for (Stmt s : f.body) body.add(s.accept(this));
-            o.set("body", body);
-            return o;
         }
-        if (it instanceof Ast.TopStmt ts) {
-            ObjectNode o = M.createObjectNode();
-            o.put("kind", "topStmt");
-            o.set("stmt", ts.stmt.accept(this));
-            return o;
-        }
-        ObjectNode u = M.createObjectNode();
-        u.put("kind", "unknownTopItem");
-        return u;
-    }
 
-    // ===== Expr.Visitor =====
-    @Override public JsonNode visitLiteral(Expr.Literal e) {
-        ObjectNode o = M.createObjectNode();
-        o.put("type", "literal");
-        o.put("value", e.value);
         return o;
     }
 
-    @Override public JsonNode visitIdent(Expr.Ident e) {
+    @Override
+    public JsonNode visitUnary(Expr.Unary e) {
         ObjectNode o = M.createObjectNode();
-        o.put("type", "ident");
-        o.put("name", e.name.lexeme);
+        o.put("expr", "unary");
+        o.put("operator", e.op.lexeme);
+        o.set("operand", e.right.accept(this));
         return o;
     }
 
-    @Override public JsonNode visitIndex(Expr.Index e) {
+    @Override
+    public JsonNode visitGrouping(Expr.Grouping e) {
         ObjectNode o = M.createObjectNode();
-        o.put("type", "index");
-        o.put("name", e.name.lexeme);
-        ArrayNode idx = M.createArrayNode();
-        for (Expr ex : e.indices) idx.add(ex.accept(this));
-        o.set("indices", idx);
+        o.put("expr", "group");
+        o.set("expr", e.expr.accept(this));
         return o;
     }
 
-    @Override public JsonNode visitGrouping(Expr.Grouping e) {
+    @Override
+    public JsonNode visitBinary(Expr.Binary e) {
         ObjectNode o = M.createObjectNode();
-        o.put("type", "group");
-        o.set("expr", e.inner.accept(this));
-        return o;
-    }
-
-    @Override public JsonNode visitCall(Expr.Call e) {
-        ObjectNode o = M.createObjectNode();
-        o.put("type", "call");
-        o.put("name", e.callee.lexeme);
-        ArrayNode args = M.createArrayNode();
-        for (Expr a : e.args) args.add(a.accept(this));
-        o.set("args", args);
-        return o;
-    }
-
-    @Override public JsonNode visitBinary(Expr.Binary e) {
-        ObjectNode o = M.createObjectNode();
-        o.put("type", "binary");
+        o.put("expr", "binary");
         o.put("op", e.op.lexeme);
         o.set("left", e.left.accept(this));
         o.set("right", e.right.accept(this));
         return o;
     }
 
-    // ===== Stmt.Visitor =====
-    @Override public JsonNode visitVarDecl(Stmt.VarDecl s) {
+    @Override
+    public JsonNode visitExprList(Expr.ExprList e) {
         ObjectNode o = M.createObjectNode();
-        o.put("stmt", "varDecl");
-        ArrayNode dims = M.createArrayNode();
-        for (Expr d : s.dims) dims.add(d.accept(this));
-        o.set("dims", dims);
-        ArrayNode names = M.createArrayNode();
-        for (var t : s.names) names.add(t.lexeme);
-        o.set("names", names);
+        o.put("expr", "exprList");
+        ArrayNode exprs = M.createArrayNode();
+        for (Expr ex : e.exprs) exprs.add(ex.accept(this));
+        o.set("exprs", exprs);
         return o;
     }
 
-    @Override public JsonNode visitReturn(Stmt.Return s) {
+    @Override
+    public JsonNode visitVarDecl(Stmt.VarDecl s) {
+        ObjectNode o = M.createObjectNode();
+        o.put("stmt", "VarDecl");
+        o.put("name", s.name.lexeme);
+        ObjectNode type = M.createObjectNode();
+
+        type.put("type", s.type.kind.name());
+        ArrayNode dims = M.createArrayNode();
+        for (Expr ex : s.dims) dims.add(ex.accept(this));
+        type.set("dims", dims);
+        o.set("type", type);
+
+        if(s.assign != null) o.set("rvalue", s.assign.accept(this));
+        return o;
+    }
+
+    @Override
+    public JsonNode visitReturn(Stmt.Return s) {
         ObjectNode o = M.createObjectNode();
         o.put("stmt", "return");
         o.set("expr", s.expr.accept(this));
         return o;
     }
 
-    @Override public JsonNode visitContinue(Stmt.Continue s) {
+    @Override
+    public JsonNode visitIfStmt(Stmt.IfStmt s) {
+        ObjectNode o = M.createObjectNode();
+        o.put("stmt", "ifStmt");
+        o.set("condition", s.condition.accept(this));
+        ArrayNode then = M.createArrayNode();
+        for (Stmt stmt : s.thenBranch) then.add(stmt.accept(this));
+        o.set("then", then);
+        if (s.elseBranch == null) return o;
+        ArrayNode els = M.createArrayNode();
+        for (Stmt stmt : s.elseBranch) els.add(stmt.accept(this));
+        o.set("then", els);
+        return o;
+    }
+
+    @Override
+    public JsonNode visitContinue(Stmt.Continue s) {
         ObjectNode o = M.createObjectNode();
         o.put("stmt", "continue");
         return o;
     }
 
-    @Override public JsonNode visitAssign(Stmt.Assign s) {
+    @Override
+    public JsonNode visitBreak(Stmt.Break s) {
         ObjectNode o = M.createObjectNode();
-        o.put("stmt", "assign");
-        o.set("left", s.left.accept(this));
-        ObjectNode lv = M.createObjectNode();
-        lv.put("name", s.lvalue.name.lexeme);
-        ArrayNode idx = M.createArrayNode();
-        for (Expr e : s.lvalue.indices) idx.add(e.accept(this));
-        lv.set("indices", idx);
-        o.set("lvalue", lv);
+        o.put("stmt", "break");
         return o;
     }
 
-    @Override public JsonNode visitCallStmt(Stmt.CallStmt s) {
+    @Override
+    public JsonNode visitForStmt(Stmt.ForStmt s) {
         ObjectNode o = M.createObjectNode();
-        o.put("stmt", "call");
-        o.set("call", s.call.accept(this));
+        o.put("stmt", "forStmt");
+        if (s.dodela == null) o.put("counter", s.counter.lexeme);
+        else o.set("counter", s.dodela.accept(this));
+        o.set("condition", s.condition.accept(this));
+        o.set("increment", s.increment.accept(this));
+        ArrayNode args = M.createArrayNode();
+        for (Stmt stmt : s.body) args.add(stmt.accept(this));
+        o.set("body", args);
         return o;
     }
 
-    @Override public JsonNode visitIfStmt(Stmt.ForStmt s) {
+    @Override
+    public JsonNode visitProcStmt(Stmt.ProcStmt s) {
         ObjectNode o = M.createObjectNode();
-        o.put("stmt", "begin_if");
-        ObjectNode first = M.createObjectNode();
-        first.set("cond", s.ifArm.cond.accept(this));
-        ArrayNode fbody = M.createArrayNode();
-        for (Stmt st : s.ifArm.block) fbody.add(st.accept(this));
-        first.set("block", fbody);
-        o.set("if", first);
+        o.put("stmt", "procStmt");
+        o.put("ime", s.name.lexeme);
+        ArrayNode args = M.createArrayNode();
+        for (Expr ex : s.args) args.add(ex.accept(this));
+        o.set("args", args);
+        return o;
+    }
 
-        ArrayNode orifs = M.createArrayNode();
-        for (Stmt.ForStmt.Arm a : s.orIfArms) {
-            ObjectNode ar = M.createObjectNode();
-            ar.set("cond", a.cond.accept(this));
-            ArrayNode bb = M.createArrayNode();
-            for (Stmt st : a.block) bb.add(st.accept(this));
-            ar.set("block", bb);
-            orifs.add(ar);
+    @Override
+    public JsonNode visitDodelaStmt(Stmt.DodelaStmt s) {
+        ObjectNode o = M.createObjectNode();
+        o.put("stmt", "dodelaStmt");
+
+        ArrayNode lvalue = M.createArrayNode();
+        for (Token t : s.lvalue) lvalue.add(t.lexeme);
+        o.set("lvalue", lvalue);
+
+        ArrayNode dims = M.createArrayNode();
+        for (Expr d : s.dims) dims.add(d.accept(this));
+        o.set("dims", dims);
+
+        ArrayNode refs = M.createArrayNode();
+        for (Expr.Ident.Ref r : s.references) refs.add(r.name());
+        o.set("references", refs);
+
+        o.set("rvalue", s.rvalue.accept(this));
+        return o;
+    }
+
+    @Override
+    public JsonNode visitProgram(Ast.Program program) throws JsonProcessingException {
+        ObjectNode o = M.createObjectNode();
+        o.put("block", "program");
+        o.put("name", program.name.lexeme);
+        ArrayNode args = M.createArrayNode();
+        for(Ast.TopItem topItem : program.items) args.add(topItem.accept(this));
+        o.set("args", args);
+
+        return o;
+    }
+
+    @Override
+    public JsonNode visitProcDecl(Ast.ProcDecl procDecl) {
+        ObjectNode o = M.createObjectNode();
+        o.put("block", "procDecl");
+        o.put("name", procDecl.name.lexeme);
+
+        if(procDecl.returnType != null) {
+            ObjectNode type = M.createObjectNode();
+            type.put("type", procDecl.returnType.kind.name());
+            ArrayNode dims = M.createArrayNode();
+            for (Expr ex : procDecl.returnType.dims) dims.add(ex.accept(this));
+            type.set("dims", dims);
+            o.set("type", type);
         }
-        o.set("or_if", orifs);
 
-        if (s.elseBlock != null) {
-            ArrayNode eb = M.createArrayNode();
-            for (Stmt st : s.elseBlock) eb.add(st.accept(this));
-            o.set("else", eb);
+        ArrayNode params = M.createArrayNode();
+        for(Ast.Param p : procDecl.params)
+        {
+            ObjectNode param = M.createObjectNode();
+            param.put("name", p.name.lexeme);
+            ObjectNode ptype = M.createObjectNode();
+            ptype.put("type", p.type.kind.name());
+            ArrayNode pdims = M.createArrayNode();
+            for (Expr ex : p.type.dims) pdims.add(ex.accept(this));
+            ptype.set("dims", pdims);
+            param.set("type", ptype);
+            params.add(param);
         }
-        return o;
-    }
+        o.set("params", params);
+        if(procDecl.varBlock != null) o.set("varBlock", procDecl.varBlock.accept(this));
 
-    @Override public JsonNode visitBeginFor(Stmt.BeginFor s) {
-        ObjectNode o = M.createObjectNode();
-        o.put("stmt", "begin_for");
-        o.put("var", s.var.lexeme);
-        o.set("from", s.from.accept(this));
-        o.set("to", s.to.accept(this));
         ArrayNode body = M.createArrayNode();
-        for (Stmt st : s.body) body.add(st.accept(this));
+        for(Stmt ex : procDecl.body)  body.add(ex.accept(this));
         o.set("body", body);
+        return o;
+    }
+
+    @Override
+    public JsonNode visitStructDecl(Ast.StructDecl structDecl) throws JsonProcessingException {
+        ObjectNode o = M.createObjectNode();
+        o.put("block", "structDecl");
+        o.put("name", structDecl.name.lexeme);
+        ArrayNode pairs =  M.createArrayNode();
+        for(Ast.Pair<Ast.Type,Token> pair : structDecl.decls)
+        {
+            ObjectNode pairNode = M.createObjectNode();
+
+            ObjectNode typeNode = M.createObjectNode();
+            typeNode.put("type", pair.first.kind.name());
+            ArrayNode dims = M.createArrayNode();
+            for (Expr ex : pair.first.dims) dims.add(ex.accept(this));
+            typeNode.set("dims", dims);
+            pairNode.set("type", typeNode);
+
+            pairNode.put("name", pair.second.lexeme);
+
+            pairs.add(pairNode);
+        }
+        o.set("fields",pairs);
+        return o;
+    }
+
+    @Override
+    public JsonNode visitEnumDecl(Ast.EnumDecl enumDecl) {
+        ObjectNode o = M.createObjectNode();
+        o.put("block", "enumDecl");
+        o.put("name", enumDecl.name.lexeme);
+        ArrayNode enums = M.createArrayNode();
+        for(Token t : enumDecl.values) enums.add(t.lexeme);
+        o.set("values", enums);
+
+        return o;
+    }
+
+    @Override
+    public JsonNode visitVarBlock(Ast.VarBlock varBlock) {
+        ObjectNode o = M.createObjectNode();
+        o.put("block", "varBlock");
+        ArrayNode decls = M.createArrayNode();
+        for(Stmt.VarDecl varDecl : varBlock.decls) decls.add(varDecl.accept(this));
+        o.set("decls", decls);
+        return o;
+    }
+
+    @Override
+    public JsonNode visitMainBlock(Ast.MainBlock mainBlock) {
+        ObjectNode o = M.createObjectNode();
+        o.put("block","mainBlock");
+        ArrayNode stmts = M.createArrayNode();
+        for(Stmt st : mainBlock.body) stmts.add(st.accept(this));
+        o.set("stmts", stmts);
         return o;
     }
 }

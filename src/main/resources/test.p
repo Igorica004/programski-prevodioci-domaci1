@@ -1,7 +1,7 @@
 program TestProgram;
 
 postoji Tacka {
-    podatak x;
+    podataksssds x;
     podatak y;
 }
 
