@@ -139,6 +139,7 @@ public final class RecognizerParser {
             consume(SEMICOL,"planirana ';'");
         }
         else if (match(CONT)) consume(SEMICOL,"planirana ';'");
+        else error(peek(),"Neocekivani token");
 
     }
 

@@ -1,12 +1,12 @@
 {
   "block" : "program",
-  "name" : "TestProgram",
+  "name" : "Kompleksan",
   "args" : [ {
     "block" : "structDecl",
     "name" : "Tacka",
     "fields" : [ {
       "type" : {
-        "type" : "IDENT",
+        "type" : "INT",
         "dims" : [ ]
       },
       "name" : "x"
@@ -34,219 +34,57 @@
       "name" : "donjiDesni"
     } ]
   }, {
-    "block" : "enumDecl",
-    "name" : "Boja",
-    "values" : [ "CRVENA", "ZELENA", "PLAVA", "ZUTA" ]
-  }, {
     "block" : "procDecl",
-    "name" : "saberi",
+    "name" : "povrsina",
     "type" : {
-      "type" : "INT",
+      "type" : "FLOAT",
       "dims" : [ ]
     },
     "params" : [ {
-      "name" : "a",
+      "name" : "r",
       "type" : {
-        "type" : "INT",
-        "dims" : [ ]
-      }
-    }, {
-      "name" : "b",
-      "type" : {
-        "type" : "INT",
+        "type" : "IDENT",
         "dims" : [ ]
       }
     } ],
     "body" : [ {
-      "stmt" : "return",
-      "expr" : {
+      "stmt" : "dodelaStmt",
+      "lvalue" : [ "sirina" ],
+      "dims" : [ ],
+      "references" : [ ],
+      "rvalue" : {
         "expr" : "binary",
-        "op" : "plus",
+        "op" : "potkresi",
         "left" : {
           "expr" : "ident",
-          "name" : [ "a" ]
+          "name" : [ "r", "donjiDesni", "x" ],
+          "references" : [ "STRUCT", "STRUCT" ]
         },
         "right" : {
           "expr" : "ident",
-          "name" : [ "b" ]
+          "name" : [ "r", "gornjiLevi", "x" ],
+          "references" : [ "STRUCT", "STRUCT" ]
         }
-      }
-    } ]
-  }, {
-    "block" : "procDecl",
-    "name" : "pomnozi",
-    "type" : {
-      "type" : "INT",
-      "dims" : [ ]
-    },
-    "params" : [ {
-      "name" : "a",
-      "type" : {
-        "type" : "INT",
-        "dims" : [ ]
       }
     }, {
-      "name" : "b",
-      "type" : {
-        "type" : "INT",
-        "dims" : [ ]
-      }
-    } ],
-    "body" : [ {
-      "stmt" : "return",
-      "expr" : {
+      "stmt" : "dodelaStmt",
+      "lvalue" : [ "visina" ],
+      "dims" : [ ],
+      "references" : [ ],
+      "rvalue" : {
         "expr" : "binary",
-        "op" : "puta",
+        "op" : "potkresi",
         "left" : {
           "expr" : "ident",
-          "name" : [ "a" ]
+          "name" : [ "r", "gornjiLevi", "y" ],
+          "references" : [ "STRUCT", "STRUCT" ]
         },
         "right" : {
           "expr" : "ident",
-          "name" : [ "b" ]
+          "name" : [ "r", "donjiDesni", "y" ],
+          "references" : [ "STRUCT", "STRUCT" ]
         }
       }
-    } ]
-  }, {
-    "block" : "procDecl",
-    "name" : "napraviNiz",
-    "type" : {
-      "type" : "INT",
-      "dims" : [ {
-        "expr" : "literal",
-        "value" : "5"
-      } ]
-    },
-    "params" : [ {
-      "name" : "start",
-      "type" : {
-        "type" : "INT",
-        "dims" : [ ]
-      }
-    }, {
-      "name" : "n",
-      "type" : {
-        "type" : "INT",
-        "dims" : [ ]
-      }
-    } ],
-    "varBlock" : {
-      "block" : "varBlock",
-      "decls" : [ {
-        "stmt" : "VarDecl",
-        "name" : "i",
-        "type" : {
-          "type" : "INT",
-          "dims" : [ ]
-        }
-      }, {
-        "stmt" : "VarDecl",
-        "name" : "rezultat",
-        "type" : {
-          "type" : "INT",
-          "dims" : [ ]
-        }
-      } ]
-    },
-    "body" : [ {
-      "stmt" : "forStmt",
-      "counter" : {
-        "stmt" : "dodelaStmt",
-        "lvalue" : [ "i" ],
-        "dims" : [ ],
-        "references" : [ ],
-        "rvalue" : {
-          "expr" : "literal",
-          "value" : "0"
-        }
-      },
-      "condition" : {
-        "expr" : "binary",
-        "op" : "<",
-        "left" : {
-          "expr" : "ident",
-          "name" : [ "i" ]
-        },
-        "right" : {
-          "expr" : "ident",
-          "name" : [ "n" ]
-        }
-      },
-      "increment" : {
-        "stmt" : "dodelaStmt",
-        "lvalue" : [ "i" ],
-        "dims" : [ ],
-        "references" : [ ],
-        "rvalue" : {
-          "expr" : "binary",
-          "op" : "plus",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "i" ]
-          },
-          "right" : {
-            "expr" : "literal",
-            "value" : "1"
-          }
-        }
-      },
-      "body" : [ {
-        "stmt" : "dodelaStmt",
-        "lvalue" : [ "rezultat" ],
-        "dims" : [ {
-          "expr" : "ident",
-          "name" : [ "i" ]
-        } ],
-        "references" : [ "ARRAY" ],
-        "rvalue" : {
-          "expr" : "binary",
-          "op" : "plus",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "start" ]
-          },
-          "right" : {
-            "expr" : "ident",
-            "name" : [ "i" ]
-          }
-        }
-      } ]
-    }, {
-      "stmt" : "return",
-      "expr" : {
-        "expr" : "ident",
-        "name" : [ "rezultat" ]
-      }
-    } ]
-  }, {
-    "block" : "procDecl",
-    "name" : "faktorijel",
-    "type" : {
-      "type" : "INT",
-      "dims" : [ ]
-    },
-    "params" : [ {
-      "name" : "n",
-      "type" : {
-        "type" : "INT",
-        "dims" : [ ]
-      }
-    } ],
-    "body" : [ {
-      "stmt" : "ifStmt",
-      "condition" : {
-        "expr" : "binary",
-        "op" : "<=",
-        "left" : {
-          "expr" : "ident",
-          "name" : [ "n" ]
-        },
-        "right" : {
-          "expr" : "literal",
-          "value" : "1"
-        }
-      },
-      "then" : [ ]
     }, {
       "stmt" : "return",
       "expr" : {
@@ -254,432 +92,28 @@
         "op" : "puta",
         "left" : {
           "expr" : "ident",
-          "name" : [ "n" ]
+          "name" : [ "sirina" ]
         },
         "right" : {
           "expr" : "ident",
-          "name" : [ "faktorijel" ],
-          "params" : [ {
-            "expr" : "binary",
-            "op" : "potkresi",
-            "left" : {
-              "expr" : "ident",
-              "name" : [ "n" ]
-            },
-            "right" : {
-              "expr" : "literal",
-              "value" : "1"
-            }
-          } ]
+          "name" : [ "visina" ]
         }
       }
-    } ]
-  }, {
-    "block" : "procDecl",
-    "name" : "max",
-    "type" : {
-      "type" : "INT",
-      "dims" : [ ]
-    },
-    "params" : [ {
-      "name" : "a",
-      "type" : {
-        "type" : "INT",
-        "dims" : [ ]
-      }
-    }, {
-      "name" : "b",
-      "type" : {
-        "type" : "INT",
-        "dims" : [ ]
-      }
-    } ],
-    "body" : [ {
-      "stmt" : "ifStmt",
-      "condition" : {
-        "expr" : "binary",
-        "op" : ">",
-        "left" : {
-          "expr" : "ident",
-          "name" : [ "a" ]
-        },
-        "right" : {
-          "expr" : "ident",
-          "name" : [ "b" ]
-        }
-      },
-      "then" : [ {
-        "stmt" : "return",
-        "expr" : {
-          "expr" : "ident",
-          "name" : [ "b" ]
-        }
-      } ]
-    } ]
-  }, {
-    "block" : "procDecl",
-    "name" : "racunaj",
-    "type" : {
-      "type" : "VOID",
-      "dims" : [ ]
-    },
-    "params" : [ {
-      "name" : "niz",
-      "type" : {
-        "type" : "INT",
-        "dims" : [ {
-          "expr" : "literal",
-          "value" : "10"
-        } ]
-      }
-    }, {
-      "name" : "n",
-      "type" : {
-        "type" : "INT",
-        "dims" : [ ]
-      }
-    } ],
-    "varBlock" : {
-      "block" : "varBlock",
-      "decls" : [ {
-        "stmt" : "VarDecl",
-        "name" : "i",
-        "type" : {
-          "type" : "INT",
-          "dims" : [ ]
-        }
-      }, {
-        "stmt" : "VarDecl",
-        "name" : "suma",
-        "type" : {
-          "type" : "INT",
-          "dims" : [ ]
-        }
-      }, {
-        "stmt" : "VarDecl",
-        "name" : "proizvod",
-        "type" : {
-          "type" : "INT",
-          "dims" : [ ]
-        }
-      } ]
-    },
-    "body" : [ {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "suma" ],
-      "dims" : [ ],
-      "references" : [ ],
-      "rvalue" : {
-        "expr" : "literal",
-        "value" : "0"
-      }
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "proizvod" ],
-      "dims" : [ ],
-      "references" : [ ],
-      "rvalue" : {
-        "expr" : "literal",
-        "value" : "1"
-      }
-    }, {
-      "stmt" : "forStmt",
-      "counter" : {
-        "stmt" : "dodelaStmt",
-        "lvalue" : [ "i" ],
-        "dims" : [ ],
-        "references" : [ ],
-        "rvalue" : {
-          "expr" : "literal",
-          "value" : "0"
-        }
-      },
-      "condition" : {
-        "expr" : "binary",
-        "op" : "<",
-        "left" : {
-          "expr" : "ident",
-          "name" : [ "i" ]
-        },
-        "right" : {
-          "expr" : "ident",
-          "name" : [ "n" ]
-        }
-      },
-      "increment" : {
-        "stmt" : "dodelaStmt",
-        "lvalue" : [ "i" ],
-        "dims" : [ ],
-        "references" : [ ],
-        "rvalue" : {
-          "expr" : "binary",
-          "op" : "plus",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "i" ]
-          },
-          "right" : {
-            "expr" : "literal",
-            "value" : "1"
-          }
-        }
-      },
-      "body" : [ {
-        "stmt" : "dodelaStmt",
-        "lvalue" : [ "suma" ],
-        "dims" : [ ],
-        "references" : [ ],
-        "rvalue" : {
-          "expr" : "binary",
-          "op" : "plus",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "suma" ]
-          },
-          "right" : {
-            "expr" : "ident",
-            "name" : [ "niz" ],
-            "dims" : [ {
-              "expr" : "ident",
-              "name" : [ "i" ]
-            } ],
-            "references" : [ "ARRAY" ]
-          }
-        }
-      }, {
-        "stmt" : "dodelaStmt",
-        "lvalue" : [ "proizvod" ],
-        "dims" : [ ],
-        "references" : [ ],
-        "rvalue" : {
-          "expr" : "binary",
-          "op" : "puta",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "proizvod" ]
-          },
-          "right" : {
-            "expr" : "ident",
-            "name" : [ "niz" ],
-            "dims" : [ {
-              "expr" : "ident",
-              "name" : [ "i" ]
-            } ],
-            "references" : [ "ARRAY" ]
-          }
-        }
-      }, {
-        "stmt" : "ifStmt",
-        "condition" : {
-          "expr" : "binary",
-          "op" : ">",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "niz" ],
-            "dims" : [ {
-              "expr" : "ident",
-              "name" : [ "i" ]
-            } ],
-            "references" : [ "ARRAY" ]
-          },
-          "right" : {
-            "expr" : "literal",
-            "value" : "10"
-          }
-        },
-        "then" : [ ]
-      } ]
-    } ]
-  }, {
-    "block" : "procDecl",
-    "name" : "obrada",
-    "type" : {
-      "type" : "VOID",
-      "dims" : [ ]
-    },
-    "params" : [ {
-      "name" : "x",
-      "type" : {
-        "type" : "INT",
-        "dims" : [ ]
-      }
-    } ],
-    "varBlock" : {
-      "block" : "varBlock",
-      "decls" : [ {
-        "stmt" : "VarDecl",
-        "name" : "i",
-        "type" : {
-          "type" : "INT",
-          "dims" : [ ]
-        }
-      } ]
-    },
-    "body" : [ {
-      "stmt" : "forStmt",
-      "counter" : {
-        "stmt" : "dodelaStmt",
-        "lvalue" : [ "i" ],
-        "dims" : [ ],
-        "references" : [ ],
-        "rvalue" : {
-          "expr" : "literal",
-          "value" : "0"
-        }
-      },
-      "condition" : {
-        "expr" : "binary",
-        "op" : "<",
-        "left" : {
-          "expr" : "ident",
-          "name" : [ "i" ]
-        },
-        "right" : {
-          "expr" : "literal",
-          "value" : "10"
-        }
-      },
-      "increment" : {
-        "stmt" : "dodelaStmt",
-        "lvalue" : [ "i" ],
-        "dims" : [ ],
-        "references" : [ ],
-        "rvalue" : {
-          "expr" : "binary",
-          "op" : "plus",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "i" ]
-          },
-          "right" : {
-            "expr" : "literal",
-            "value" : "1"
-          }
-        }
-      },
-      "body" : [ {
-        "stmt" : "ifStmt",
-        "condition" : {
-          "expr" : "binary",
-          "op" : "==",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "i" ]
-          },
-          "right" : {
-            "expr" : "literal",
-            "value" : "5"
-          }
-        },
-        "then" : [ ]
-      }, {
-        "stmt" : "ifStmt",
-        "condition" : {
-          "expr" : "binary",
-          "op" : ">",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "i" ]
-          },
-          "right" : {
-            "expr" : "ident",
-            "name" : [ "x" ]
-          }
-        },
-        "then" : [ ]
-      } ]
     } ]
   }, {
     "block" : "varBlock",
     "decls" : [ {
       "stmt" : "VarDecl",
-      "name" : "x",
+      "name" : "figure",
       "type" : {
-        "type" : "INT",
+        "type" : "IDENT",
         "dims" : [ ]
       }
     }, {
       "stmt" : "VarDecl",
-      "name" : "y",
-      "type" : {
-        "type" : "INT",
-        "dims" : [ ]
-      }
-    }, {
-      "stmt" : "VarDecl",
-      "name" : "z",
-      "type" : {
-        "type" : "INT",
-        "dims" : [ ]
-      }
-    }, {
-      "stmt" : "VarDecl",
-      "name" : "pi",
+      "name" : "rezultati",
       "type" : {
         "type" : "FLOAT",
-        "dims" : [ ]
-      }
-    }, {
-      "stmt" : "VarDecl",
-      "name" : "karakter",
-      "type" : {
-        "type" : "CHAR",
-        "dims" : [ ]
-      }
-    }, {
-      "stmt" : "VarDecl",
-      "name" : "tekst",
-      "type" : {
-        "type" : "STRING",
-        "dims" : [ ]
-      }
-    }, {
-      "stmt" : "VarDecl",
-      "name" : "istina",
-      "type" : {
-        "type" : "BOOL",
-        "dims" : [ ]
-      }
-    }, {
-      "stmt" : "VarDecl",
-      "name" : "niz",
-      "type" : {
-        "type" : "INT",
-        "dims" : [ ]
-      }
-    }, {
-      "stmt" : "VarDecl",
-      "name" : "matrica",
-      "type" : {
-        "type" : "INT",
-        "dims" : [ ]
-      }
-    }, {
-      "stmt" : "VarDecl",
-      "name" : "tacka1",
-      "type" : {
-        "type" : "IDENT",
-        "dims" : [ ]
-      }
-    }, {
-      "stmt" : "VarDecl",
-      "name" : "pravougaonik",
-      "type" : {
-        "type" : "IDENT",
-        "dims" : [ ]
-      }
-    }, {
-      "stmt" : "VarDecl",
-      "name" : "boja",
-      "type" : {
-        "type" : "IDENT",
-        "dims" : [ ]
-      }
-    }, {
-      "stmt" : "VarDecl",
-      "name" : "rezultat",
-      "type" : {
-        "type" : "INT",
         "dims" : [ ]
       }
     }, {
@@ -688,213 +122,116 @@
       "type" : {
         "type" : "INT",
         "dims" : [ ]
-      }
-    }, {
-      "stmt" : "VarDecl",
-      "name" : "j",
-      "type" : {
-        "type" : "INT",
-        "dims" : [ ]
+      },
+      "rvalue" : {
+        "expr" : "literal",
+        "value" : "0"
       }
     } ]
   }, {
     "block" : "mainBlock",
     "stmts" : [ {
       "stmt" : "dodelaStmt",
-      "lvalue" : [ "x" ],
-      "dims" : [ ],
-      "references" : [ ],
-      "rvalue" : {
+      "lvalue" : [ "figure" ],
+      "dims" : [ {
         "expr" : "literal",
-        "value" : "10"
-      }
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "y" ],
-      "dims" : [ ],
-      "references" : [ ],
+        "value" : "0"
+      } ],
+      "references" : [ "ARRAY" ],
       "rvalue" : {
-        "expr" : "literal",
-        "value" : "20"
-      }
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "z" ],
-      "dims" : [ ],
-      "references" : [ ],
-      "rvalue" : {
-        "expr" : "ident",
-        "name" : [ "saberi" ],
-        "params" : [ {
-          "expr" : "ident",
-          "name" : [ "x" ]
+        "expr" : "exprList",
+        "exprs" : [ {
+          "expr" : "exprList",
+          "exprs" : [ {
+            "expr" : "literal",
+            "value" : "0"
+          }, {
+            "expr" : "literal",
+            "value" : "10"
+          } ]
         }, {
-          "expr" : "ident",
-          "name" : [ "y" ]
+          "expr" : "exprList",
+          "exprs" : [ {
+            "expr" : "literal",
+            "value" : "20"
+          }, {
+            "expr" : "literal",
+            "value" : "0"
+          } ]
         } ]
       }
     }, {
       "stmt" : "dodelaStmt",
-      "lvalue" : [ "pi" ],
-      "dims" : [ ],
-      "references" : [ ],
-      "rvalue" : {
+      "lvalue" : [ "figure" ],
+      "dims" : [ {
         "expr" : "literal",
-        "value" : "3.14"
+        "value" : "1"
+      } ],
+      "references" : [ "ARRAY" ],
+      "rvalue" : {
+        "expr" : "exprList",
+        "exprs" : [ {
+          "expr" : "exprList",
+          "exprs" : [ {
+            "expr" : "unary",
+            "operator" : "potkresi",
+            "operand" : {
+              "expr" : "literal",
+              "value" : "5"
+            }
+          }, {
+            "expr" : "literal",
+            "value" : "8"
+          } ]
+        }, {
+          "expr" : "exprList",
+          "exprs" : [ {
+            "expr" : "literal",
+            "value" : "10"
+          }, {
+            "expr" : "unary",
+            "operator" : "potkresi",
+            "operand" : {
+              "expr" : "literal",
+              "value" : "2"
+            }
+          } ]
+        } ]
       }
     }, {
       "stmt" : "dodelaStmt",
-      "lvalue" : [ "karakter" ],
-      "dims" : [ ],
-      "references" : [ ],
-      "rvalue" : {
+      "lvalue" : [ "figure" ],
+      "dims" : [ {
         "expr" : "literal",
-        "value" : "'A'"
-      }
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "tekst" ],
-      "dims" : [ ],
-      "references" : [ ],
+        "value" : "2"
+      } ],
+      "references" : [ "ARRAY" ],
       "rvalue" : {
-        "expr" : "literal",
-        "value" : "\"Zdravo svete\""
-      }
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "istina" ],
-      "dims" : [ ],
-      "references" : [ ],
-      "rvalue" : {
-        "expr" : "literal",
-        "value" : "pozitivno"
-      }
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "boja" ],
-      "dims" : [ ],
-      "references" : [ ],
-      "rvalue" : {
-        "expr" : "ident",
-        "name" : [ "CRVENA" ]
-      }
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "tacka1", "x" ],
-      "dims" : [ ],
-      "references" : [ "STRUCT" ],
-      "rvalue" : {
-        "expr" : "literal",
-        "value" : "5"
-      }
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "tacka1", "y" ],
-      "dims" : [ ],
-      "references" : [ "STRUCT" ],
-      "rvalue" : {
-        "expr" : "literal",
-        "value" : "10"
-      }
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "pravougaonik", "gornjiLevi", "x" ],
-      "dims" : [ ],
-      "references" : [ "STRUCT", "STRUCT" ],
-      "rvalue" : {
-        "expr" : "literal",
-        "value" : "0"
-      }
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "pravougaonik", "gornjiLevi", "y" ],
-      "dims" : [ ],
-      "references" : [ "STRUCT", "STRUCT" ],
-      "rvalue" : {
-        "expr" : "literal",
-        "value" : "0"
-      }
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "pravougaonik", "donjiDesni", "x" ],
-      "dims" : [ ],
-      "references" : [ "STRUCT", "STRUCT" ],
-      "rvalue" : {
-        "expr" : "literal",
-        "value" : "100"
-      }
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "pravougaonik", "donjiDesni", "y" ],
-      "dims" : [ ],
-      "references" : [ "STRUCT", "STRUCT" ],
-      "rvalue" : {
-        "expr" : "literal",
-        "value" : "50"
-      }
-    }, {
-      "stmt" : "forStmt",
-      "counter" : {
-        "stmt" : "dodelaStmt",
-        "lvalue" : [ "i" ],
-        "dims" : [ ],
-        "references" : [ ],
-        "rvalue" : {
-          "expr" : "literal",
-          "value" : "0"
-        }
-      },
-      "condition" : {
-        "expr" : "binary",
-        "op" : "<",
-        "left" : {
-          "expr" : "ident",
-          "name" : [ "i" ]
-        },
-        "right" : {
-          "expr" : "literal",
-          "value" : "10"
-        }
-      },
-      "increment" : {
-        "stmt" : "dodelaStmt",
-        "lvalue" : [ "i" ],
-        "dims" : [ ],
-        "references" : [ ],
-        "rvalue" : {
-          "expr" : "binary",
-          "op" : "plus",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "i" ]
-          },
-          "right" : {
+        "expr" : "exprList",
+        "exprs" : [ {
+          "expr" : "exprList",
+          "exprs" : [ {
             "expr" : "literal",
             "value" : "1"
-          }
-        }
-      },
-      "body" : [ {
-        "stmt" : "dodelaStmt",
-        "lvalue" : [ "niz" ],
-        "dims" : [ {
-          "expr" : "ident",
-          "name" : [ "i" ]
-        } ],
-        "references" : [ "ARRAY" ],
-        "rvalue" : {
-          "expr" : "binary",
-          "op" : "puta",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "i" ]
-          },
-          "right" : {
+          }, {
             "expr" : "literal",
-            "value" : "2"
-          }
-        }
-      } ]
+            "value" : "1"
+          } ]
+        }, {
+          "expr" : "exprList",
+          "exprs" : [ {
+            "expr" : "literal",
+            "value" : "6"
+          }, {
+            "expr" : "unary",
+            "operator" : "potkresi",
+            "operand" : {
+              "expr" : "literal",
+              "value" : "9"
+            }
+          } ]
+        } ]
+      }
     }, {
       "stmt" : "forStmt",
       "counter" : {
@@ -926,330 +263,9 @@
         "references" : [ ],
         "rvalue" : {
           "expr" : "binary",
-          "op" : "plus",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "i" ]
-          },
-          "right" : {
-            "expr" : "literal",
-            "value" : "1"
-          }
-        }
-      },
-      "body" : [ {
-        "stmt" : "forStmt",
-        "counter" : {
-          "stmt" : "dodelaStmt",
-          "lvalue" : [ "j" ],
-          "dims" : [ ],
-          "references" : [ ],
-          "rvalue" : {
-            "expr" : "literal",
-            "value" : "0"
-          }
-        },
-        "condition" : {
-          "expr" : "binary",
-          "op" : "<",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "j" ]
-          },
-          "right" : {
-            "expr" : "literal",
-            "value" : "3"
-          }
-        },
-        "increment" : {
-          "stmt" : "dodelaStmt",
-          "lvalue" : [ "j" ],
-          "dims" : [ ],
-          "references" : [ ],
-          "rvalue" : {
-            "expr" : "binary",
-            "op" : "plus",
-            "left" : {
-              "expr" : "ident",
-              "name" : [ "j" ]
-            },
-            "right" : {
-              "expr" : "literal",
-              "value" : "1"
-            }
-          }
-        },
-        "body" : [ {
-          "stmt" : "dodelaStmt",
-          "lvalue" : [ "matrica" ],
-          "dims" : [ {
-            "expr" : "ident",
-            "name" : [ "i" ]
-          }, {
-            "expr" : "ident",
-            "name" : [ "j" ]
-          } ],
-          "references" : [ "ARRAY", "ARRAY" ],
-          "rvalue" : {
-            "expr" : "binary",
-            "op" : "plus",
-            "left" : {
-              "expr" : "ident",
-              "name" : [ "i" ]
-            },
-            "right" : {
-              "expr" : "ident",
-              "name" : [ "j" ]
-            }
-          }
-        } ]
-      } ]
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "rezultat" ],
-      "dims" : [ ],
-      "references" : [ ],
-      "rvalue" : {
-        "expr" : "ident",
-        "name" : [ "faktorijel" ],
-        "params" : [ {
-          "expr" : "literal",
-          "value" : "5"
-        } ]
-      }
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "rezultat" ],
-      "dims" : [ ],
-      "references" : [ ],
-      "rvalue" : {
-        "expr" : "ident",
-        "name" : [ "max" ],
-        "params" : [ {
-          "expr" : "ident",
-          "name" : [ "x" ]
-        }, {
-          "expr" : "ident",
-          "name" : [ "y" ]
-        } ]
-      }
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "rezultat" ],
-      "dims" : [ ],
-      "references" : [ ],
-      "rvalue" : {
-        "expr" : "binary",
-        "op" : "potkresi",
-        "left" : {
-          "expr" : "binary",
-          "op" : "puta",
-          "left" : {
-            "expr" : {
-              "expr" : "binary",
-              "op" : "plus",
-              "left" : {
-                "expr" : "ident",
-                "name" : [ "x" ]
-              },
-              "right" : {
-                "expr" : "ident",
-                "name" : [ "y" ]
-              }
-            }
-          },
-          "right" : {
-            "expr" : "ident",
-            "name" : [ "z" ]
-          }
-        },
-        "right" : {
-          "expr" : "literal",
-          "value" : "5"
-        }
-      }
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "rezultat" ],
-      "dims" : [ ],
-      "references" : [ ],
-      "rvalue" : {
-        "expr" : "binary",
-        "op" : "podigni",
-        "left" : {
-          "expr" : "literal",
-          "value" : "2"
-        },
-        "right" : {
-          "expr" : "literal",
-          "value" : "8"
-        }
-      }
-    }, {
-      "stmt" : "ifStmt",
-      "condition" : {
-        "expr" : "binary",
-        "op" : "&&",
-        "left" : {
-          "expr" : "binary",
-          "op" : ">",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "x" ]
-          },
-          "right" : {
-            "expr" : "literal",
-            "value" : "5"
-          }
-        },
-        "right" : {
-          "expr" : "binary",
-          "op" : "<",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "y" ]
-          },
-          "right" : {
-            "expr" : "literal",
-            "value" : "30"
-          }
-        }
-      },
-      "then" : [ {
-        "stmt" : "dodelaStmt",
-        "lvalue" : [ "z" ],
-        "dims" : [ ],
-        "references" : [ ],
-        "rvalue" : {
-          "expr" : "binary",
           "op" : "potkresi",
           "left" : {
             "expr" : "ident",
-            "name" : [ "x" ]
-          },
-          "right" : {
-            "expr" : "ident",
-            "name" : [ "y" ]
-          }
-        }
-      } ]
-    }, {
-      "stmt" : "ifStmt",
-      "condition" : {
-        "expr" : "binary",
-        "op" : "||",
-        "left" : {
-          "expr" : "binary",
-          "op" : "==",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "x" ]
-          },
-          "right" : {
-            "expr" : "literal",
-            "value" : "10"
-          }
-        },
-        "right" : {
-          "expr" : "binary",
-          "op" : "!=",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "y" ]
-          },
-          "right" : {
-            "expr" : "literal",
-            "value" : "15"
-          }
-        }
-      },
-      "then" : [ ]
-    }, {
-      "stmt" : "ifStmt",
-      "condition" : {
-        "expr" : "unary",
-        "operator" : "!",
-        "operand" : {
-          "expr" : {
-            "expr" : "binary",
-            "op" : "<",
-            "left" : {
-              "expr" : "ident",
-              "name" : [ "x" ]
-            },
-            "right" : {
-              "expr" : "literal",
-              "value" : "0"
-            }
-          }
-        }
-      },
-      "then" : [ ]
-    }, {
-      "stmt" : "ifStmt",
-      "condition" : {
-        "expr" : "binary",
-        "op" : "&&",
-        "left" : {
-          "expr" : "binary",
-          "op" : ">=",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "x" ]
-          },
-          "right" : {
-            "expr" : "literal",
-            "value" : "10"
-          }
-        },
-        "right" : {
-          "expr" : "binary",
-          "op" : "<=",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "y" ]
-          },
-          "right" : {
-            "expr" : "literal",
-            "value" : "20"
-          }
-        }
-      },
-      "then" : [ ]
-    }, {
-      "stmt" : "forStmt",
-      "counter" : {
-        "stmt" : "dodelaStmt",
-        "lvalue" : [ "i" ],
-        "dims" : [ ],
-        "references" : [ ],
-        "rvalue" : {
-          "expr" : "literal",
-          "value" : "0"
-        }
-      },
-      "condition" : {
-        "expr" : "binary",
-        "op" : "<",
-        "left" : {
-          "expr" : "ident",
-          "name" : [ "i" ]
-        },
-        "right" : {
-          "expr" : "literal",
-          "value" : "5"
-        }
-      },
-      "increment" : {
-        "stmt" : "dodelaStmt",
-        "lvalue" : [ "i" ],
-        "dims" : [ ],
-        "references" : [ ],
-        "rvalue" : {
-          "expr" : "binary",
-          "op" : "plus",
-          "left" : {
-            "expr" : "ident",
             "name" : [ "i" ]
           },
           "right" : {
@@ -1259,38 +275,8 @@
         }
       },
       "body" : [ {
-        "stmt" : "ifStmt",
-        "condition" : {
-          "expr" : "binary",
-          "op" : "==",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "i" ]
-          },
-          "right" : {
-            "expr" : "literal",
-            "value" : "2"
-          }
-        },
-        "then" : [ ]
-      }, {
-        "stmt" : "ifStmt",
-        "condition" : {
-          "expr" : "binary",
-          "op" : "==",
-          "left" : {
-            "expr" : "ident",
-            "name" : [ "i" ]
-          },
-          "right" : {
-            "expr" : "literal",
-            "value" : "4"
-          }
-        },
-        "then" : [ ]
-      }, {
         "stmt" : "dodelaStmt",
-        "lvalue" : [ "niz" ],
+        "lvalue" : [ "rezultati" ],
         "dims" : [ {
           "expr" : "ident",
           "name" : [ "i" ]
@@ -1298,55 +284,50 @@
         "references" : [ "ARRAY" ],
         "rvalue" : {
           "expr" : "ident",
-          "name" : [ "i" ]
+          "name" : [ "povrsina" ],
+          "params" : [ {
+            "expr" : "ident",
+            "name" : [ "figure" ],
+            "dims" : [ {
+              "expr" : "ident",
+              "name" : [ "i" ]
+            } ],
+            "references" : [ "ARRAY" ]
+          } ]
         }
       } ]
     }, {
-      "stmt" : "procStmt",
-      "ime" : "racunaj",
-      "args" : [ {
-        "expr" : "ident",
-        "name" : [ "niz" ]
-      }, {
-        "expr" : "literal",
-        "value" : "10"
-      } ]
-    }, {
-      "stmt" : "procStmt",
-      "ime" : "obrada",
-      "args" : [ {
-        "expr" : "ident",
-        "name" : [ "x" ]
-      } ]
-    }, {
       "stmt" : "dodelaStmt",
-      "lvalue" : [ "rezultat" ],
-      "dims" : [ ],
-      "references" : [ ],
+      "lvalue" : [ "rezultati" ],
+      "dims" : [ {
+        "expr" : "literal",
+        "value" : "0"
+      } ],
+      "references" : [ "ARRAY" ],
       "rvalue" : {
         "expr" : "binary",
-        "op" : "podeljeno",
+        "op" : "plus",
         "left" : {
-          "expr" : {
-            "expr" : "binary",
-            "op" : "plus",
-            "left" : {
-              "expr" : "literal",
-              "value" : "10"
-            },
-            "right" : {
-              "expr" : "literal",
-              "value" : "20"
-            }
-          }
+          "expr" : "ident",
+          "name" : [ "rezultati" ],
+          "dims" : [ {
+            "expr" : "literal",
+            "value" : "0"
+          } ],
+          "references" : [ "ARRAY" ]
         },
         "right" : {
           "expr" : {
             "expr" : "binary",
-            "op" : "potkresi",
+            "op" : "podigni",
             "left" : {
-              "expr" : "literal",
-              "value" : "5"
+              "expr" : "ident",
+              "name" : [ "figure", "donjiDesni", "x" ],
+              "dims" : [ {
+                "expr" : "literal",
+                "value" : "1"
+              } ],
+              "references" : [ "ARRAY", "STRUCT", "STRUCT" ]
             },
             "right" : {
               "expr" : "literal",
@@ -1357,63 +338,28 @@
       }
     }, {
       "stmt" : "dodelaStmt",
-      "lvalue" : [ "rezultat" ],
-      "dims" : [ ],
-      "references" : [ ],
+      "lvalue" : [ "figure", "gornjiLevi", "x" ],
+      "dims" : [ {
+        "expr" : "literal",
+        "value" : "1"
+      } ],
+      "references" : [ "ARRAY", "STRUCT", "STRUCT" ],
       "rvalue" : {
         "expr" : "binary",
-        "op" : "povrat",
+        "op" : "plus",
         "left" : {
-          "expr" : "literal",
-          "value" : "17"
+          "expr" : "ident",
+          "name" : [ "figure", "gornjiLevi", "x" ],
+          "dims" : [ {
+            "expr" : "literal",
+            "value" : "1"
+          } ],
+          "references" : [ "ARRAY", "STRUCT", "STRUCT" ]
         },
         "right" : {
           "expr" : "literal",
-          "value" : "5"
+          "value" : "100"
         }
-      }
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "x" ],
-      "dims" : [ ],
-      "references" : [ ],
-      "rvalue" : {
-        "expr" : "literal",
-        "value" : "+15"
-      }
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "y" ],
-      "dims" : [ ],
-      "references" : [ ],
-      "rvalue" : {
-        "expr" : "literal",
-        "value" : "-10"
-      }
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "istina" ],
-      "dims" : [ ],
-      "references" : [ ],
-      "rvalue" : {
-        "expr" : "literal",
-        "value" : "pogresno"
-      }
-    }, {
-      "stmt" : "dodelaStmt",
-      "lvalue" : [ "niz" ],
-      "dims" : [ ],
-      "references" : [ ],
-      "rvalue" : {
-        "expr" : "ident",
-        "name" : [ "napraviNiz" ],
-        "params" : [ {
-          "expr" : "literal",
-          "value" : "1"
-        }, {
-          "expr" : "literal",
-          "value" : "5"
-        } ]
       }
     } ]
   } ]

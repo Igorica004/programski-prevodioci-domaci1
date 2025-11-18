@@ -21,7 +21,7 @@ public final class TokenFormatter {
         String lexStr = center("'" + escape(t.lexeme) + "'", 18);
         String litStr = center(t.literal == null ? "N/A" : t.literal.toString(), 11);
         String lineStr = center("line " + t.line, 9);
-        String colStr = center("col " + t.colStart + "-" + t.colEnd, 11);
+        String colStr = center("col " + (t.colStart+1) + "-" + (1+t.colEnd), 11);
 
         return String.format("|%s|%s|%s|%s|%s|", typeStr, lexStr, litStr, lineStr, colStr);
     }

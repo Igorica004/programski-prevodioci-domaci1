@@ -119,7 +119,7 @@ public class Lekser {
                     }
                 }
                 if (!hit) { // todo handlovati gresku
-                    throw new RuntimeException("Nevalidan karakter '" + line.charAt(col) + "' na poziciji " + row + ":" + col);
+                    throw new RuntimeException("Nevalidan karakter '" + line.charAt(col) + "' na poziciji " + row + ":" + (col+1));
                 }
             }
             row++;
