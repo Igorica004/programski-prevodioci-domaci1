@@ -1,1 +1,1 @@
-Domaći zadatak iz predmeta Programski prevodioci na Računarskom fakultetu. Projekat rađen sa kolegom Luka Milić RN 47/2023
+Domaći zadatak iz predmeta Programski prevodioci na Računarskom fakultetu. Projekat rađen sa kolegom Luka Milić RN 47/2023. Osmišljavanje i dokumentovanje programskog jezika Plang i implementiranje leksičke i sintaksne analize.
